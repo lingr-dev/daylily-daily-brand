@@ -1,0 +1,106 @@
+{
+  "format": "custom",
+  "id": "settings",
+  "json": {
+    "Main": {
+      "site_name": {
+        "config": {
+          "label": "站点名称"
+        },
+        "type": "Text"
+      },
+      "site_tagline": {
+        "config": {
+          "label": "一句话定位"
+        },
+        "type": "Text"
+      },
+      "logo": {
+        "config": {
+          "label": "Logo"
+        },
+        "type": "Image"
+      },
+      "primary_nav": {
+        "config": {
+          "allowText": true,
+          "label": "主导航",
+          "repeat": true
+        },
+        "type": "Link"
+      },
+      "footer_nav": {
+        "config": {
+          "allowText": true,
+          "label": "页脚导航",
+          "repeat": true
+        },
+        "type": "Link"
+      },
+      "footer_note": {
+        "config": {
+          "label": "页脚说明",
+          "multi": "paragraph,strong,em,hyperlink"
+        },
+        "type": "StructuredText"
+      },
+      "icp_license": {
+        "config": {
+          "label": "ICP 备案号",
+          "placeholder": "京ICP备00000000号-1"
+        },
+        "type": "Text"
+      },
+      "contact_email": {
+        "config": {
+          "label": "联系邮箱"
+        },
+        "type": "Text"
+      },
+      "contact_phone": {
+        "config": {
+          "label": "联系电话"
+        },
+        "type": "Text"
+      },
+      "contact_address": {
+        "config": {
+          "label": "办公地址"
+        },
+        "type": "Text"
+      },
+      "social_links": {
+        "config": {
+          "fields": {
+            "platform": {
+              "config": {
+                "label": "平台",
+                "options": [
+                  "wechat",
+                  "weibo",
+                  "linkedin",
+                  "github",
+                  "youtube",
+                  "x"
+                ]
+              },
+              "type": "Select"
+            },
+            "link": {
+              "config": {
+                "label": "链接",
+                "select": "web"
+              },
+              "type": "Link"
+            }
+          },
+          "label": "社交账号"
+        },
+        "type": "Group"
+      }
+    }
+  },
+  "label": "Settings",
+  "repeatable": false,
+  "status": true
+}

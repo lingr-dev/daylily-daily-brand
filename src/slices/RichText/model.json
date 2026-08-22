@@ -1,0 +1,25 @@
+{
+  "id": "rich_text",
+  "name": "Rich Text",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "content": {
+          "config": {
+            "allowTargetBlank": true,
+            "label": "正文",
+            "multi": "heading2,heading3,heading4,paragraph,strong,em,hyperlink,list-item,o-list-item,image,embed,preformatted"
+          },
+          "type": "StructuredText"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "stats",
+  "name": "Stats",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "value": {
+                "config": {
+                  "label": "数值",
+                  "placeholder": "如 200+ / 99.9%"
+                },
+                "type": "Text"
+              },
+              "label": {
+                "config": {
+                  "label": "名称"
+                },
+                "type": "Text"
+              },
+              "description": {
+                "config": {
+                  "label": "补充说明"
+                },
+                "type": "Text"
+              }
+            },
+            "label": "指标"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

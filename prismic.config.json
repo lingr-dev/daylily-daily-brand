@@ -1,0 +1,21 @@
+{
+  "repositoryName": "PLACEHOLDER-REPO",
+  "routes": [
+    {
+      "type": "homepage",
+      "path": "/"
+    },
+    {
+      "type": "news_index",
+      "path": "/news"
+    },
+    {
+      "type": "news_post",
+      "path": "/news/:uid"
+    },
+    {
+      "type": "page",
+      "path": "/:uid"
+    }
+  ]
+}

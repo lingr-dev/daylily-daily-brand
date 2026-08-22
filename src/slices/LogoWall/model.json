@@ -1,0 +1,51 @@
+{
+  "id": "logo_wall",
+  "name": "Logo Wall",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题"
+          },
+          "type": "Text"
+        },
+        "logos": {
+          "config": {
+            "fields": {
+              "logo": {
+                "config": {
+                  "label": "图片"
+                },
+                "type": "Image"
+              },
+              "name": {
+                "config": {
+                  "label": "名称（无障碍替代文本）"
+                },
+                "type": "Text"
+              },
+              "link": {
+                "config": {
+                  "allowTargetBlank": true,
+                  "label": "链接",
+                  "select": "web"
+                },
+                "type": "Link"
+              }
+            },
+            "label": "Logo"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

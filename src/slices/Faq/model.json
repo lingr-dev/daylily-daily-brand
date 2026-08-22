@@ -1,0 +1,45 @@
+{
+  "id": "faq",
+  "name": "Faq",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "question": {
+                "config": {
+                  "label": "问题"
+                },
+                "type": "Text"
+              },
+              "answer": {
+                "config": {
+                  "label": "回答",
+                  "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+                },
+                "type": "StructuredText"
+              }
+            },
+            "label": "问答"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "id": "hero",
+  "name": "Hero",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "eyebrow": {
+          "config": {
+            "label": "眉标",
+            "placeholder": "标题上方的小字"
+          },
+          "type": "Text"
+        },
+        "heading": {
+          "config": {
+            "label": "主标题",
+            "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "副文案",
+            "multi": "paragraph,strong,em,hyperlink"
+          },
+          "type": "StructuredText"
+        },
+        "primary_link": {
+          "config": {
+            "allowText": true,
+            "label": "主按钮"
+          },
+          "type": "Link"
+        },
+        "secondary_link": {
+          "config": {
+            "allowText": true,
+            "label": "次按钮"
+          },
+          "type": "Link"
+        }
+      },
+      "version": ""
+    },
+    {
+      "description": "With Image",
+      "docURL": "",
+      "id": "withImage",
+      "imageUrl": "",
+      "name": "With Image",
+      "primary": {
+        "eyebrow": {
+          "config": {
+            "label": "眉标"
+          },
+          "type": "Text"
+        },
+        "heading": {
+          "config": {
+            "label": "主标题",
+            "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "副文案",
+            "multi": "paragraph,strong,em,hyperlink"
+          },
+          "type": "StructuredText"
+        },
+        "primary_link": {
+          "config": {
+            "allowText": true,
+            "label": "主按钮"
+          },
+          "type": "Link"
+        },
+        "secondary_link": {
+          "config": {
+            "allowText": true,
+            "label": "次按钮"
+          },
+          "type": "Link"
+        },
+        "image": {
+          "config": {
+            "label": "配图"
+          },
+          "type": "Image"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

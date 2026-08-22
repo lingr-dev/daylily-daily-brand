@@ -1,0 +1,57 @@
+{
+  "id": "testimonial",
+  "name": "Testimonial",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "quote": {
+                "config": {
+                  "label": "引述",
+                  "multi": "paragraph,strong,em"
+                },
+                "type": "StructuredText"
+              },
+              "author_name": {
+                "config": {
+                  "label": "姓名"
+                },
+                "type": "Text"
+              },
+              "author_title": {
+                "config": {
+                  "label": "职位 / 公司"
+                },
+                "type": "Text"
+              },
+              "author_avatar": {
+                "config": {
+                  "label": "头像"
+                },
+                "type": "Image"
+              }
+            },
+            "label": "证言"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

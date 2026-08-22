@@ -1,0 +1,81 @@
+{
+  "id": "image_text",
+  "name": "Image Text",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "正文",
+            "multi": "paragraph,strong,em,hyperlink,list-item"
+          },
+          "type": "StructuredText"
+        },
+        "image": {
+          "config": {
+            "label": "配图"
+          },
+          "type": "Image"
+        },
+        "link": {
+          "config": {
+            "allowText": true,
+            "label": "链接"
+          },
+          "type": "Link"
+        }
+      },
+      "version": ""
+    },
+    {
+      "description": "Image Left",
+      "docURL": "",
+      "id": "imageLeft",
+      "imageUrl": "",
+      "name": "Image Left",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "正文",
+            "multi": "paragraph,strong,em,hyperlink,list-item"
+          },
+          "type": "StructuredText"
+        },
+        "image": {
+          "config": {
+            "label": "配图"
+          },
+          "type": "Image"
+        },
+        "link": {
+          "config": {
+            "allowText": true,
+            "label": "链接"
+          },
+          "type": "Link"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "feature_grid",
+  "name": "Feature Grid",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "引言",
+            "multi": "paragraph,strong,em"
+          },
+          "type": "StructuredText"
+        },
+        "columns": {
+          "config": {
+            "default_value": "3",
+            "label": "每行列数",
+            "options": [
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "type": "Select"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "icon": {
+                "config": {
+                  "label": "图标"
+                },
+                "type": "Image"
+              },
+              "title": {
+                "config": {
+                  "label": "标题"
+                },
+                "type": "Text"
+              },
+              "description": {
+                "config": {
+                  "label": "描述",
+                  "multi": "paragraph,strong,em,hyperlink"
+                },
+                "type": "StructuredText"
+              }
+            },
+            "label": "条目"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

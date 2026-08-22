@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 构建期本地化下来的 Prismic 图片（体积大，由 scripts/localize-images.ts 重新生成）
+/public/_img/
