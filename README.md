@@ -109,11 +109,19 @@ Prismic 图片托管在 imgix（海外域名）。内容虽然在构建期已烘
 | `PRISMIC_ACCESS_TOKEN` | 仓库 API 设为 private 时必需；预发构建查询非 master ref 也必需 |
 | `PRISMIC_RELEASE_LABEL` | **仅预发构建**：要构建的 Release 名称 |
 
-部署后两件容易漏的事：
+托管在自建 Nginx，配置示例见 [`deploy/nginx.conf.example`](deploy/nginx.conf.example)，
+其中已处理好这几件容易漏的事：
 
-- **刷 CDN 缓存**。漏了就是「发布了但线上没变」。
-- **配缓存 header**：HTML 短缓存 / no-cache，`/_next/static/*` 带 hash 可长缓存。
-  `next.config` 的 `headers` 在静态导出下无效，这套策略只能在 CDN 侧配。
+- **`try_files` 与 `trailingSlash: true` 配对** —— 产物是 `about/index.html`，
+  改 trailingSlash 就得同步改 Nginx。
+- **缓存分层** —— HTML 必须 `no-cache` 回源校验，否则发布后用户看到旧页面；
+  `/_next/static/` 可 immutable；`/_img/` 给 30 天。
+  `next.config` 的 `headers` 在静态导出下无效，这套策略只能在 Nginx 侧配。
+- **404 指向 `out/404.html`**（Next 静态导出会生成它）。
+- **只压文本类**，webp/jpg 再压是纯 CPU 浪费。
+
+部署本身就是把 `out/` 同步过去（`rsync -av --delete out/ user@host:/var/www/brand/out/`），
+不需要 Node 运行时。
 
 另外，域名需要 **ICP 备案** 才能在国内 CDN 正常服务，周期以周计，建议尽早并行推进。
 

@@ -1,0 +1,104 @@
+# ============================================================================
+# Nginx 配置示例 —— 服务 `pnpm build` 产出的 out/ 目录
+#
+# 与 next.config.ts 里的 `trailingSlash: true` 是配对的：产物形如
+# out/about/index.html（而非 out/about.html），所以能直接靠目录索引映射。
+# 改动 trailingSlash 就必须同步改这里的 try_files。
+# ============================================================================
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+
+    # 生产环境应重定向到 HTTPS 并配好证书
+    # return 301 https://$host$request_uri;
+
+    root /var/www/brand/out;
+    index index.html;
+
+    charset utf-8;
+
+    # ------------------------------------------------------------------------
+    # 路由
+    # ------------------------------------------------------------------------
+
+    # $uri/          —— /about/ 命中 about/index.html
+    # $uri/index.html —— /about  也能命中（少一次重定向）
+    location / {
+        try_files $uri $uri/index.html $uri/ =404;
+    }
+
+    # Next 静态导出会生成 out/404.html
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    # ------------------------------------------------------------------------
+    # 缓存策略
+    #
+    # 静态导出下 next.config 的 `headers` 配置无效，缓存只能在这里配。
+    # 漏配的后果是「发布了但用户看到旧页面」。
+    # ------------------------------------------------------------------------
+
+    # Next 构建产物，文件名带内容 hash，可以永久缓存
+    location /_next/static/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        access_log off;
+    }
+
+    # 本地化后的 Prismic 图片。
+    # 文件名来自「资源路径 + 裁剪参数」的 hash，而 Prismic 的资源路径本身含内容
+    # 标识 —— 换图或改裁剪都会产生新文件名。实际上是内容寻址的，但不像 Next 产物
+    # 那样有形式保证，所以给 30 天而不是 immutable。
+    location /_img/ {
+        add_header Cache-Control "public, max-age=2592000";
+        access_log off;
+    }
+
+    # HTML 必须每次回源校验，否则内容发布后用户拿不到新页面
+    location ~* \.html$ {
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+
+    location = /sitemap.xml {
+        add_header Cache-Control "public, max-age=3600";
+    }
+
+    location = /robots.txt {
+        add_header Cache-Control "public, max-age=3600";
+    }
+
+    # ------------------------------------------------------------------------
+    # 压缩
+    # 只压文本类。webp/jpg/png 已经是压缩格式，再压是纯 CPU 浪费。
+    # ------------------------------------------------------------------------
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        application/javascript
+        application/json
+        application/xml
+        image/svg+xml;
+
+    # 装了 ngx_brotli 的话再开这段，中文 HTML 上 brotli 比 gzip 明显更小
+    # brotli on;
+    # brotli_comp_level 5;
+    # brotli_types text/plain text/css application/javascript application/json image/svg+xml;
+
+    # ------------------------------------------------------------------------
+    # 安全响应头
+    # ------------------------------------------------------------------------
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # 站点是纯静态、无内联脚本以外的外部依赖，CSP 可以收得很紧。
+    # 上线前用浏览器控制台确认没有被误拦的资源。
+    # add_header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; frame-ancestors 'self' https://*.prismic.io" always;
+}
