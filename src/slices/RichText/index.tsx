@@ -1,26 +1,28 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import { isFilled, type Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import { Container } from "@/components/Container";
+import { RichText as RichTextRenderer } from "@/components/RichText";
 
-/**
- * Props for `RichText`.
- */
 export type RichTextProps = SliceComponentProps<Content.RichTextSlice>;
 
 /**
- * Component for "Rich Text" Slices.
+ * 正文区块。宽度收窄到易读的行长（中文约 30-40 字/行），
+ * 不跟随 Container 的最大宽度。
  */
-const RichText: FC<RichTextProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
-};
+export default function RichText({ slice }: RichTextProps) {
+  if (!isFilled.richText(slice.primary.content)) return null;
 
-export default RichText
+  return (
+    <section
+      data-slice-type={slice.slice_type}
+      data-slice-variation={slice.variation}
+      className="py-section"
+    >
+      <Container>
+        <div className="max-w-2xl">
+          <RichTextRenderer field={slice.primary.content} />
+        </div>
+      </Container>
+    </section>
+  );
+}

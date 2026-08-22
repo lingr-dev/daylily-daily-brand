@@ -1,26 +1,67 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import { isFilled, type Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import { Container } from "@/components/Container";
+import { RichText } from "@/components/RichText";
 
-/**
- * Props for `Stats`.
- */
 export type StatsProps = SliceComponentProps<Content.StatsSlice>;
 
-/**
- * Component for "Stats" Slices.
- */
-const Stats: FC<StatsProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
-};
+/** 完整 class 字符串查表 —— 拼出来的动态类名不会被 Tailwind 收集。 */
+const columnClasses = [
+  "",
+  "sm:grid-cols-1",
+  "sm:grid-cols-2",
+  "sm:grid-cols-3",
+  "sm:grid-cols-2 lg:grid-cols-4",
+] as const;
 
-export default Stats
+function gridClassFor(count: number): string {
+  return columnClasses[Math.min(count, 4)] ?? columnClasses[4];
+}
+
+export default function Stats({ slice }: StatsProps) {
+  const { heading, items } = slice.primary;
+
+  if (items.length === 0 && !isFilled.richText(heading)) return null;
+
+  return (
+    <section
+      data-slice-type={slice.slice_type}
+      data-slice-variation={slice.variation}
+      className="py-section"
+    >
+      <Container>
+        <div className="rounded-card border border-line bg-surface px-6 py-12 md:px-12">
+          {isFilled.richText(heading) && (
+            <div className="max-w-2xl">
+              <RichText field={heading} />
+            </div>
+          )}
+
+          {items.length > 0 && (
+            <dl
+              className={`grid gap-x-8 gap-y-10 ${gridClassFor(items.length)} ${
+                isFilled.richText(heading) ? "mt-12" : ""
+              }`}
+            >
+              {items.map((item, index) => (
+                <div key={index}>
+                  <dd className="text-display-sm font-semibold tracking-tight text-brand-600">
+                    {item.value}
+                  </dd>
+                  <dt className="mt-2 text-base font-medium text-ink">
+                    {item.label}
+                  </dt>
+                  {item.description && (
+                    <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
+      </Container>
+    </section>
+  );
+}

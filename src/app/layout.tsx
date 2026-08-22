@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getFooterNav, getPrimaryNav } from "@/lib/navigation";
+import { getSettings } from "@/lib/settings";
 import { site } from "@/lib/site";
+import { isReleaseBuild } from "@/prismicio";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  /** OG 图与 canonical 需要绝对地址；静态导出下这个值在构建期烘死，由 CI 注入 */
-  metadataBase: new URL(site.url),
-  title: {
-    default: site.name,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  openGraph: {
-    type: "website",
-    siteName: site.name,
-    locale: "zh_CN",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const name = settings.data.site_name || site.name;
+
+  return {
+    /** OG 图与 canonical 需要绝对地址；静态导出下这个值构建期烘死，由 CI 注入 */
+    metadataBase: new URL(site.url),
+    title: {
+      default: name,
+      template: `%s | ${name}`,
+    },
+    description: settings.data.site_tagline || site.description,
+    openGraph: {
+      type: "website",
+      siteName: name,
+      locale: "zh_CN",
+    },
+    formatDetection: { telephone: false },
+    /** 预发站不应该被搜索引擎收录 */
+    robots: isReleaseBuild ? { index: false, follow: false } : undefined,
+  };
+}
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [primaryNav, footerNav] = await Promise.all([
-    getPrimaryNav(),
-    getFooterNav(),
-  ]);
+  const settings = await getSettings();
 
   return (
     <html lang={site.htmlLang}>
@@ -38,11 +41,22 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           跳到主内容
         </a>
-        <SiteHeader nav={primaryNav} />
+
+        {/*
+          预发构建的显式标记。预发站和生产站长得一模一样，没有标记的话
+          迟早有人把预发链接当正式链接发出去。
+        */}
+        {isReleaseBuild && (
+          <div className="bg-brand-900 px-4 py-2 text-center text-xs text-brand-100">
+            预发环境 · 内容取自未发布的 Release，请勿对外分享此链接
+          </div>
+        )}
+
+        <SiteHeader settings={settings} />
         <main id="main" className="flex-1">
           {children}
         </main>
-        <SiteFooter nav={footerNav} />
+        <SiteFooter settings={settings} />
       </body>
     </html>
   );
