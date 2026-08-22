@@ -125,6 +125,23 @@ Prismic 图片托管在 imgix（海外域名）。内容虽然在构建期已烘
 
 另外，域名需要 **ICP 备案** 才能在国内 CDN 正常服务，周期以周计，建议尽早并行推进。
 
+## 产物体积（实测）
+
+用 fixture 数据构建首页（含全部 9 个 slice）的实测结果：
+
+| | gzip |
+| --- | --- |
+| HTML | 7 KB |
+| CSS | 5 KB |
+| JS | 199 KB |
+
+JS 那 199KB 基本是 **App Router 的固有基线**（React 运行时 + `next/link`），
+不是业务代码 —— 本项目自身只有 `/slice-simulator` 一个 client component 边界。
+站内交互（移动端菜单、FAQ 折叠）都用原生 `<details>`，不新增 client 组件。
+
+如果这个基线不可接受，那是选 Astro 而非 Next 的理由，而不是在 Next 里继续抠 ——
+两者的取舍见 `docs/tech-research.md` 第 2 节。
+
 ## 预览工作流
 
 纯静态导出下 Next 的 Draft Mode 不可用（官方明确不兼容）。预览能力由两条路径覆盖：

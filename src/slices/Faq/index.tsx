@@ -6,7 +6,7 @@ import { RichText } from "@/components/RichText";
 export type FaqProps = SliceComponentProps<Content.FaqSlice>;
 
 /**
- * 折叠面板用原生 <details>，与站内其他交互保持一致：零客户端 JS，
+ * 折叠面板用原生 <details>，与站内其他交互保持一致：不引入 client component，
  * 键盘和读屏开箱可用。
  */
 export default function Faq({ slice }: FaqProps) {

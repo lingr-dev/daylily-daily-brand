@@ -73,7 +73,10 @@ npx prismic docs list       # 官方文档可离线查
 - 站点承诺单一亮色外观，不做 dark mode。
 - 不加载中文 webfont（体积以 MB 计）。需要品牌字型时用 `next/font/local` 加载
   **子集化**后的字体，且只用于大标题。
-- 交互优先用原生 `<details>` 等零 JS 方案 —— 全站客户端 JS 接近 0 是刻意维持的。
+- 交互优先用原生 `<details>` 等无需 client component 的方案。
+  注意准确的说法：这样做省下的是**增量** JS，不是把总量压到 0 ——
+  App Router 本身就有约 200KB(gzip) 的 React 运行时基线（实测见 README）。
+  刻意维持的是「不新增 client 组件」，本项目自身只有 slice 模拟器一个 client 边界。
 
 ## 富文本
 

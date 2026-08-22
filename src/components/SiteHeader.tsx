@@ -9,10 +9,10 @@ import { site } from "@/lib/site";
 /**
  * 移动端菜单用原生 <details> 实现，不引入客户端 JS。
  *
- * 取舍：静态导出 + 国内首屏，把 JS 压到接近 0 的收益大于一个动画菜单。
+ * 取舍：这样不需要新增 client component。注意它省下的是增量 JS —— App Router
+ * 的 React 运行时基线本来就在（约 200KB gzip），并不会因此变成零 JS 页面。
  * <details>/<summary> 本身就是「披露控件」语义，键盘和读屏都可用。
- * 若后续设计要求带动效的抽屉菜单，改成 client component 即可，
- * 代价是把 React 运行时拉进首屏。
+ * 若后续设计要求带动效的抽屉菜单，改成 client component 即可。
  */
 export function SiteHeader({
   settings,
