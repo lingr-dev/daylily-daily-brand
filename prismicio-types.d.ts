@@ -437,6 +437,39 @@ interface SettingsDocumentData {
 	icp_license: prismic.KeyTextField;
 	
 	/**
+	 * 小程序备案号 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 京ICP备00000000号-2X
+	 * - **API ID Path**: settings.miniprogram_icp_license
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	miniprogram_icp_license: prismic.KeyTextField;
+	
+	/**
+	 * 公安备案号 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 京公网安备00000000000000号
+	 * - **API ID Path**: settings.police_license
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	police_license: prismic.KeyTextField;
+	
+	/**
+	 * 公安备案查询链接 field in *Settings*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.police_license_link
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/link
+	 */
+	police_license_link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
 	 * 联系邮箱 field in *Settings*
 	 *
 	 * - **Field Type**: Text
@@ -479,6 +512,70 @@ interface SettingsDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
 	 */
 	social_links: prismic.GroupField<Simplify<SettingsDocumentDataSocialLinksItem>>;
+	
+	/**
+	 * 百度统计 ID field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: hm.js?<ID> 里的那串 ID
+	 * - **API ID Path**: settings.baidu_analytics_id
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	baidu_analytics_id: prismic.KeyTextField;/**
+	 * 小程序按钮文案 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 打开小程序
+	 * - **API ID Path**: settings.miniprogram_cta_label
+	 * - **Tab**: 小程序
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	miniprogram_cta_label: prismic.KeyTextField;
+	
+	/**
+	 * 小程序二维码 field in *Settings*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.miniprogram_qrcode
+	 * - **Tab**: 小程序
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	miniprogram_qrcode: prismic.ImageField<never>;
+	
+	/**
+	 * 扫码弹窗标题 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 微信扫码打开
+	 * - **API ID Path**: settings.miniprogram_qr_title
+	 * - **Tab**: 小程序
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	miniprogram_qr_title: prismic.KeyTextField;
+	
+	/**
+	 * 扫码弹窗说明 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 使用微信扫描下方二维码，即可打开小程序。
+	 * - **API ID Path**: settings.miniprogram_qr_description
+	 * - **Tab**: 小程序
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	miniprogram_qr_description: prismic.KeyTextField;
+	
+	/**
+	 * 扫码弹窗脚注 field in *Settings*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 已上线，扫码即可在微信中使用
+	 * - **API ID Path**: settings.miniprogram_qr_note
+	 * - **Tab**: 小程序
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	miniprogram_qr_note: prismic.KeyTextField;
 }
 
 /**
