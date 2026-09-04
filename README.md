@@ -181,6 +181,33 @@ npx prismic webhook create <预发 CI 触发地址> \
 
 CI 侧务必做**防抖**：一次批量发布会连发多个 webhook，不加并发组会打出十几个构建。
 
+## 工作仓库 submodule（只拉一级）
+
+`req-specs/` 与 `uiux/` 是独立工作仓库，以 **git submodule** 挂在本仓根目录。
+`uiux` 自己还声明了嵌套的 `req-specs/`；本仓只消费顶层这两个挂载点，**不初始化嵌套子模块**。
+
+新环境克隆后补全一级 submodule（不要加 `--recursive`）：
+
+```sh
+git submodule sync
+git submodule update --init
+```
+
+日常同步到各自 `origin/main` 最新提交时，同样不要递归：
+
+```sh
+git submodule foreach '
+  set -e
+  git fetch origin --prune
+  git checkout main
+  git pull --ff-only origin main
+'
+```
+
+`git submodule status` 里：一级 `req-specs` / `uiux` 应已检出；`uiux/req-specs` 前缀为 `-`（未初始化）是预期状态。若嵌套被误拉下来，在 `uiux/` 内执行 `git submodule deinit -f req-specs`。
+
+`.gitmodules` 已为两个一级模块写了 `fetchRecurseSubmodules = false`，避免 `clone --recurse-submodules` 越界拉嵌套。
+
 ## 目录结构
 
 ```
@@ -188,6 +215,8 @@ docs/tech-research.md          技术路线调研与决策依据
 prismic.config.json            Prismic 仓库名与路由解析规则
 customtypes/                   页面类型模型（CLI 管理，勿手改）
 prismicio-types.d.ts           由模型生成的 TS 类型（勿手改）
+req-specs/                     需求规格工作仓库（git submodule，只读）
+uiux/                          UI/UX 工作仓库（git submodule，只读；嵌套 req-specs 不检出）
 scripts/
   bootstrap-content-model.sh   现有模型的建模过程记录
   localize-images.mts          构建期图片本地化

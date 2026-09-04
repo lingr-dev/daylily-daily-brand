@@ -7,6 +7,13 @@
 
 改动这个仓库前，先知道下面这些边界 —— 它们不是风格偏好，越过去会直接坏掉。
 
+## 工作仓库 submodule 只拉一级
+
+`req-specs/` 与 `uiux/` 是顶层 git submodule，只读。同步只用
+`git submodule sync` 和 `git submodule update --init`，**禁止** `--recursive`。
+`uiux` 内嵌套的 `req-specs/` 保持未初始化（`git submodule status` 前缀 `-`）是预期状态，
+不要为「去重」改写子仓库自己的 `.gitmodules`。
+
 ## 纯静态导出的硬边界
 
 `output: 'export'` 下这些**不可用**，Next 会让构建失败：

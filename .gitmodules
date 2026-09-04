@@ -1,0 +1,8 @@
+[submodule "req-specs"]
+	path = req-specs
+	url = git@lingr.github.com:linger-cn/daylily-daily-req-specs.git
+	fetchRecurseSubmodules = false
+[submodule "uiux"]
+	path = uiux
+	url = git@lingr.github.com:linger-cn/daylily-daily-uiux.git
+	fetchRecurseSubmodules = false
