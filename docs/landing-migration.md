@@ -488,7 +488,9 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
    否则两套词汇并存正是 §3.4 排除掉的方案 C。
 2. ✅ **全站换词**（2026-09-15）：17 个文件的类名对齐，`globals.css` 接线，
    `CLAUDE.md` 样式章节重写。站点现在是「换了皮」的状态：蓝白 → 宣纸墨色。
-3. **Icon 组件**：9 个内联 SVG。后面三个 slice 都依赖它。
+3. ✅ **Icon 组件**（2026-09-15）：`src/components/Icon.tsx`，9 个内联 SVG，
+   路径数据从 Remix Icon 4.2.0 原样取出并逐字节比对。导出的 `iconNames`
+   就是第 4 步建模时 `icon` 字段的 Select 选项值。
 4. **内容模型**（§4）：CLI 建模 → `gen types` → `push`。
 5. **slice 组件**：FeatureGrid 两变体 → MediaCards → Callout → CtaBanner light → Hero。
 6. **壳层**：SiteHeader CTA、SiteFooter 备案、layout 统计与 JSON-LD。
