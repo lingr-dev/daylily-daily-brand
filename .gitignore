@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# 编辑器 / 工具的本地配置，属于个人环境而非仓库约定
+.obsidian/
+.idea/
+.vscode/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
