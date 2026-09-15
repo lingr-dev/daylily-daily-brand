@@ -28,6 +28,11 @@
 推论：
 
 - **动态路由必须有 `generateStaticParams()`**，否则构建失败。
+- 更进一步：**`generateStaticParams()` 返回空数组也会让构建失败**
+  （`at least one route must be generated`）。所以每个动态路由背后
+  **至少要有一篇文档**。这是运营上的真实风险 —— 把新闻全部下架，
+  站点就构建不出来了。单例同理：`/news` 走 `getSingle("news_index")`，
+  缺了那篇单例构建一样失败。
 - **metadata route（`sitemap.ts` / `robots.ts`）必须显式 `export const dynamic = "force-static"`**。
 - 需要「请求期」行为时，不要试图绕过 —— 那说明该功能不属于这条技术路线，
   先回到 `docs/tech-research.md` 重新评估。
@@ -123,10 +128,17 @@ npx prismic docs list       # 官方文档可离线查
 ```sh
 pnpm tokens:check                 # 令牌是否与 uiux 漂移
 pnpm typecheck && pnpm lint
-pnpm build:next                   # 类型与静态导出约束
+pnpm build:next                   # 类型、静态导出约束、取数（需要 Prismic 连接）
 pnpm classes:check                # 依赖上一步的产物，见下
-pnpm build                        # 完整构建（需要 Prismic 连接）
+pnpm build                        # 完整构建 = pnpm images + build:next
 ```
+
+**`pnpm build:next` 需要 Prismic 连接。** 此前这里写的是「不需要连接也能验证」，
+不对 —— 它要为每个页面取数，`generateStaticParams` 更是绕不过去。
+`build` 与 `build:next` 的差别只在前者多跑一步 `pnpm images`。
+
+国内直连 `images.prismic.io` / `*.cdn.prismic.io` 偶尔会 `ConnectTimeout`，
+重跑一次通常就好 —— 这正是本项目要在构建期消除的那条跨境依赖。
 
 **`classes:check` 不能省。** 无效的 Tailwind 类是**静默忽略**的 —— 不报错、
 不警告，页面只是少了那个样式，`typecheck` 和 `lint` 一个都拦不住。
@@ -134,6 +146,5 @@ pnpm build                        # 完整构建（需要 Prismic 连接）
 `bg-surface-container-container` 两处。这个脚本把 `src/` 里每个 `className`
 token 拿去真实编译产物里核对，所以必须先 `pnpm build:next` 产出 CSS。
 
-注：`pnpm build:next` 目前会在收集页面数据时失败 —— Prismic 仓库里还没有
-自定义类型，link resolver 报 `Unknown type`。CSS 在那之前已经产出，
-`classes:check` 不受影响。`npx prismic push` 之后这条应当恢复正常，届时复核本节。
+**`classes:check` 依赖 `build:next` 产出的 CSS。** 即使 `build:next` 在取数阶段
+失败（例如 Prismic 连不上），CSS 也已经产出，`classes:check` 仍然可用。

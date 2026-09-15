@@ -440,15 +440,46 @@ npx prismic locale remove en-us         # ✗ 稳定 400，CLI 让去提 issue
   报的错**一模一样**，`Expected one of:` 都是空
 
 最能解释这组事实的假设：**route resolver 校验的是「该 ref 上存在的类型」，
-而零文档的 ref 上没有任何类型。** 官方文档（`prismic docs view routes`
-与 `content-api`）没有记载这条校验规则，所以这只是假设，未经证实。
+而零文档的 ref 上没有任何类型。**
 
-可证伪的做法：在 Prismic 后台发布任意一篇文档，再跑一次 `pnpm build:next`。
-**这件事在第 7 步录入内容时自然会发生**，不必为它单独绕路。
+**✅ 2026-09-16 已证实。** 灌入内容并发布后，带 `routes` 的查询立刻返回 200。
 
-在此之前 `CLAUDE.md`「`pnpm build:next` 不需要 Prismic 连接也能验证类型与静态
-导出约束」这句话仍然不成立，暂不修改 —— 等有内容后一次性复核。
-注意 CSS 在失败之前已经产出，所以 `pnpm classes:check` 不受影响。
+但中间绕了一下值得记：发布完立刻构建**仍然报同样的错**，因为 CDN 还在发旧 ref
+（`apqLKhEAAC4ABySq`），而新 ref 是 `aqnUahUAADEAVajQ`。当时差点据此判定假设被证伪。
+**发布之后要等 CDN 传播，再构建**；判断一个 Prismic 相关的构建结论之前，
+先确认手里的 ref 是不是最新的。
+
+官方文档（`prismic docs view routes` 与 `content-api`）没有记载这条校验规则。
+
+---
+
+## 4C. 示例内容与 `output: "export"` 的又一条硬边界（2026-09-16）
+
+`scripts/seed-content.mts` 给空仓库灌一份能跑通的示例内容。它是**一次性种子，
+不是内容的真相来源** —— 编辑在后台改过之后不要再拿它去覆盖，脚本自身做了幂等：
+先读一遍现状，只补缺的，已存在的跳过。
+
+文案按词表 2.0.0 写（健康手帐 / 健康安排 / 健康记录），没有照抄原型的旧词。见 §6A。
+
+**踩到的新边界：`output: "export"` 下，动态路由的 `generateStaticParams()`
+返回空数组会直接让构建失败。**
+
+```
+Page "/[uid]" returned an empty array from "generateStaticParams()".
+With "output: export", at least one route must be generated.
+```
+
+推论（`CLAUDE.md`「纯静态导出的硬边界」一节该补上这条）：
+
+- 每个动态路由**至少要有一篇文档**，否则整站构建失败。
+- 这是运营上的真实风险：把新闻全部下架，站点就构建不出来了。
+- 单例同理 —— `/news` 走 `getSingle("news_index")`，缺了它构建也失败。
+
+种子因此建了 5 篇：`settings`、`homepage`、`news_index` 三个单例，
+外加 `page/about` 与 `news_post/hello` 各一篇占位，纯粹为了让两个动态路由有路可生成。
+
+**凭证处理的一条教训**：`npx prismic token list` 会把完整 token 打印到终端。
+创建 write token 后不要再跑它。token 只写进 `.env.local`（`.gitignore` 的 `.env*` 已挡住）。
 
 ---
 
@@ -622,12 +653,19 @@ pnpm build            # 完整构建（需要 Prismic 连接）
 3. **锚点导航与多页结构的张力。** 品牌站 `SiteHeader` 是全站共用的，
    锚点只在首页有意义。统一写成绝对形式 `/#philosophy`，避免内页失效。
 
-4. **Prismic 的 Link 字段能否填纯锚点** 需要在实际建模时验一次。
-   若 web link 校验拒绝 `/#philosophy`，`settings.primary_nav` 就要从 Link 字段
-   改成 Group（`label` Text + `anchor` Text），届时 `SiteHeader` 一并调整。
+4. ~~**Prismic 的 Link 字段能否填纯锚点**~~ ✅ 2026-09-16 已验证可行。
+   `{ link_type: "Web", url: "/#philosophy", text: "设计理念" }` 正常保存与渲染，
+   产物里就是 `href="/#philosophy"`。`settings.primary_nav` 不需要改成 Group。
+   注意可重复的 link 字段每一项还要一个 `key`，TypeScript 会提示。
 
 5. **`--marketing-*` 的文字合规档要回上游补**（§3.2）。
    在补齐之前，品牌站用 `--brand-deep` 顶着，不阻塞。
+
+5A. **首次完整构建通过（2026-09-16）**：9 个页面全部预渲染 ——
+   `/`、`/about`、`/news`、`/news/hello`、`/robots.txt`、`/sitemap.xml`、
+   `/slice-simulator`、`/_not-found`。首页渲染出 8 个 slice、5 个锚点、
+   8 个内联图标，词表 2.0.0 零旧词残留。
+   页脚目前只显示 ICP 备案 —— 小程序备案与公安备案要等第 6 步壳层改动。
 
 6. **`pnpm build:next` 目前必然失败，与本方案无关。** Prismic 仓库 `daylily` 刚绑定、
    自定义类型还没 push，link resolver 拿不到任何类型，`/news/[uid]` 收集页面数据时报
