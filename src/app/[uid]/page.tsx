@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SliceZone } from "@prismicio/react";
 import { buildMetadata } from "@/lib/seo";
+import { getSettings } from "@/lib/settings";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 
@@ -10,9 +11,18 @@ import { components } from "@/slices";
  */
 export default async function Page({ params }: PageProps<"/[uid]">) {
   const { uid } = await params;
-  const page = await createClient().getByUID("page", uid);
+  const [page, settings] = await Promise.all([
+    createClient().getByUID("page", uid),
+    getSettings(),
+  ]);
 
-  return <SliceZone slices={page.data.slices} components={components} />;
+  return (
+    <SliceZone
+      slices={page.data.slices}
+      components={components}
+      context={{ settings }}
+    />
+  );
 }
 
 export async function generateMetadata({

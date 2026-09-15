@@ -62,6 +62,7 @@ export default function Hero({ slice }: HeroProps) {
 
   return (
     <section
+      id={slice.primary.anchor_id || undefined}
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
       className="py-section-lg"

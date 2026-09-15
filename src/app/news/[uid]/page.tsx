@@ -6,6 +6,7 @@ import { Container } from "@/components/Container";
 import { PrismicImage } from "@/components/PrismicImage";
 import { formatDate } from "@/lib/format";
 import { buildMetadata } from "@/lib/seo";
+import { getSettings } from "@/lib/settings";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 
@@ -13,7 +14,10 @@ export default async function NewsPostPage({
   params,
 }: PageProps<"/news/[uid]">) {
   const { uid } = await params;
-  const post = await createClient().getByUID("news_post", uid);
+  const [post, settings] = await Promise.all([
+    createClient().getByUID("news_post", uid),
+    getSettings(),
+  ]);
   const publishedAt = formatDate(post.data.published_at);
 
   return (
@@ -56,7 +60,11 @@ export default async function NewsPostPage({
         )}
       </Container>
 
-      <SliceZone slices={post.data.slices} components={components} />
+      <SliceZone
+        slices={post.data.slices}
+        components={components}
+        context={{ settings }}
+      />
     </article>
   );
 }

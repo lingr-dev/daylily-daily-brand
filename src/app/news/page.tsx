@@ -4,6 +4,7 @@ import { SliceZone } from "@prismicio/react";
 import { Container } from "@/components/Container";
 import { NewsCard } from "@/components/NewsCard";
 import { buildMetadata } from "@/lib/seo";
+import { getSettings } from "@/lib/settings";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 
@@ -24,14 +25,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function NewsIndexPage() {
   const client = createClient();
-  const [page, posts] = await Promise.all([
+  const [page, posts, settings] = await Promise.all([
     client.getSingle("news_index"),
     client.getAllByType("news_post", { orderings }),
+    getSettings(),
   ]);
 
   return (
     <>
-      <SliceZone slices={page.data.slices} components={components} />
+      <SliceZone
+        slices={page.data.slices}
+        components={components}
+        context={{ settings }}
+      />
 
       <Container className="py-section">
         {posts.length === 0 ? (

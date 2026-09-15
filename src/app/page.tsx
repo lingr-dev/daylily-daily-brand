@@ -19,7 +19,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const page = await createClient().getSingle("homepage");
+  const [page, settings] = await Promise.all([
+    createClient().getSingle("homepage"),
+    getSettings(),
+  ]);
 
-  return <SliceZone slices={page.data.slices} components={components} />;
+  return (
+    <SliceZone
+      slices={page.data.slices}
+      components={components}
+      context={{ settings }}
+    />
+  );
 }
