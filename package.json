@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "images": "node scripts/localize-images.mts",
+    "tokens:sync": "node scripts/sync-tokens.mts",
+    "tokens:check": "node scripts/sync-tokens.mts --check",
     "build": "pnpm run images && next build",
     "build:next": "next build",
     "preview": "npx --yes serve@latest out",

@@ -1,0 +1,134 @@
+/* 由 scripts/sync-tokens.mts 生成，请勿手改。
+ *
+ * 真相来源：uiux/prototypes/daylily-daily/themes/tokens.css
+ * 上游版本：baseline-pre-v0.5.0-82-gb1ca663
+ *
+ * 改颜色请改上游，然后跑 `pnpm tokens:sync`。
+ * `pnpm tokens:check` 会在 CI 里把漂移变成构建失败。
+ *
+ * 命名沿用 uiux 的通道名（content-primary / surface-base / sand …）而不是
+ * tokens.css 的语义名（ink / paper / hair）—— 通道名才是两边 markup 里实际
+ * 出现的词，对齐的意义在于人读两个仓库时用同一套词汇。
+ */
+
+/* 原样透传：不生成工具类，供自定义 CSS 以及下面 @theme 里引用它们的值使用。 */
+:root {
+  --shadow-rgb: 68 64 60;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --dur-fast: 120ms;
+  --dur: 180ms;
+  --dur-slow: 320ms;
+  --tap-min: 44px;
+  --tap-comfort: 56px;
+}
+
+@theme {
+
+  /* ── 纸面与容器 ──
+     默认背景是宣纸白，不是纯白；纯白只用于浮在宣纸上的卡片 */
+  --color-surface-base: #F9F7F3;                                   /* 宣纸白 · 全局画布 */
+  --color-surface-container: #FFFFFF;                              /* 纯白容器 · 列表卡、面板 */
+  --color-surface-elevated: #FFFFFF;                               /* 抬升面 · 弹层、浮层 */
+
+  /* ── 墨色 ──
+     括号内为宣纸白上的对比度。正文最低 4.5:1，大字最低 3:1 */
+  --color-content-primary: #2D2926;                                /* 墨色主文 · 标题 13.47:1 */
+  --color-content-body: #4A443F;                                   /* 墨色正文 · 正文 8.96:1 */
+  --color-content-secondary: #6B635B;                              /* 墨色次文 · 次级正文 5.51:1 */
+  --color-content-muted: #8C847E;                                  /* 烟灰辅文 · 仅限大字/装饰 3.43:1 —— 不可用于正文 */
+  --color-content-inverse: #FFFFFF;                                /* 反白 · 落在品牌色填充上 */
+
+  /* ── 描边与安静填充 ──
+     名字按「生成出来的工具类名」定，不照抄 uiux preset 的键路径 —— 那边 border.subtle 在 Tailwind 里会变成 border-border-subtle。落地页 markup 实际写的是 border-sand（28 处）与 border-hairline（1 处） */
+  --color-hair: #E7E5E4;                                           /* 浅石描边 */
+  --color-hairline: rgba(45, 41, 38, .06);                         /* 极淡分隔，用于导航栏等 chrome */
+  --color-fill-quiet: #F3F1EE;                                     /* 安静填充 · 禁用态、次级标签底、进度槽。 此前散成 #F3F1EE / #F7F5F2 / #EFECE7 三个近似值。 */
+
+  /* ── 落地页专用 ──
+     ⚠️ peach 1.89:1 / jade 2.64:1，两者都不可作文字色。橙色系文字用 brand-deep；主 CTA 用 peach 填充配墨字（7.15:1）。详见 docs/landing-migration.md §3.2。刻意不叫 brand-primary/brand-jade：落地页那两个类名是靠页内 DaylilyTailwind.extend 把 brand.primary 改指 peach 才成立的，而 brand-primary 在 uiux 别处是萱草橙 #EA580C。同名不同值正是 themes/README.md 反复警告的陷阱，不引进本仓库 */
+  --color-marketing-peach: #FF9F68;                                /* 官网主色 · 比 --brand 更柔，只用于官网 */
+  --color-marketing-jade: #8F9E8B;                                 /* 官网次色 · 草木灰绿 */
+  --color-sand: #E5E0D8;                                           /* 暖砂描边 · 机身模型与卡片描边 */
+  --color-sand-wash: #F4F1EA;                                      /* 暖砂底 · 大面积浅底 */
+
+  /* ── 橙色系文字档 ──
+     官网主色是 peach 不是萱草橙，但橙色系文字仍只有这一个合规值 */
+  --color-brand-deep: #9A3412;                                     /* 萱草橙墨 · 纸面 6.83:1，橙色系文字唯一合规值 */
+
+  /* ── 微信绿 ──
+     外部品牌常量，不随皮肤变。用于「打开小程序」这一具体 affordance */
+  --color-wechat-green: #07C160;                                   /* 微信品牌绿 */
+  --color-wechat-green-deep: #06AD56;                              /* 按压 / 渐变收尾 */
+  --color-wechat-green-light: #E1F6EA;                             /* 绿雾 · 卡底 */
+
+  /* ── 圆角 ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-card: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* ── 字号 ──
+     行高取自 uiux 的 tailwind-preset.js，与那边逐档相同。
+     元组里只放字号与行高：字重和字距由 markup 上的 font-* / tracking-* 表达，
+     塞进字阶只会让两者打架。 */
+  --text-display: clamp(2.25rem, 5vw, 4.5rem);                     /* 仅落地页衬线大标题 */
+  --text-display--line-height: 1.15;
+  --text-title-1: 1.875rem;                                        /* 30px */
+  --text-title-1--line-height: 1.2;
+  --text-title-2: 1.5rem;                                          /* 24px */
+  --text-title-2--line-height: 1.25;
+  --text-title-3: 1.25rem;                                         /* 20px */
+  --text-title-3--line-height: 1.3;
+  --text-h1: 1.375rem;                                             /* 22px · 页内主标题 */
+  --text-h1--line-height: 1.3;
+  --text-h2: 1.0625rem;                                            /* 17px · 页内小节标题 */
+  --text-h2--line-height: 1.35;
+  --text-cta: 1.125rem;                                            /* 18px · 主按钮 */
+  --text-cta--line-height: 1.25;
+  --text-body-lg: 1.125rem;                                        /* 18px */
+  --text-body-lg--line-height: 1.5;
+  --text-body-base: 1rem;                                          /* 16px · 正文基准 */
+  --text-body-base--line-height: 1.5;
+  --text-detail: .9375rem;                                         /* 15px */
+  --text-detail--line-height: 1.5;
+  --text-body-sm: .875rem;                                         /* 14px */
+  --text-body-sm--line-height: 1.5;
+  --text-note: .8125rem;                                           /* 13px */
+  --text-note--line-height: 1.5;
+  --text-caption: .75rem;                                          /* 12px · 眉标与状态标签，配字重与字距而非小字号 */
+  --text-caption--line-height: 1.4;
+
+  /* ── Tailwind 内置字号档改指同一批令牌 ──
+     字号取值与 Tailwind 默认完全相同（12/14/16/18/20/24/30），
+     既有类名一个像素都不变，但从此跟着令牌走。 */
+  --text-xs: .75rem;                                               /* 12px · 眉标与状态标签，配字重与字距而非小字号 */
+  --text-xs--line-height: 1.4;
+  --text-sm: .875rem;                                              /* 14px */
+  --text-sm--line-height: 1.5;
+  --text-base: 1rem;                                               /* 16px · 正文基准 */
+  --text-base--line-height: 1.5;
+  --text-lg: 1.125rem;                                             /* 18px */
+  --text-lg--line-height: 1.5;
+  --text-xl: 1.25rem;                                              /* 20px */
+  --text-xl--line-height: 1.3;
+  --text-2xl: 1.5rem;                                              /* 24px */
+  --text-2xl--line-height: 1.25;
+  --text-3xl: 1.875rem;                                            /* 30px */
+  --text-3xl--line-height: 1.2;
+
+  /* ── 字体 ── 系统字体栈，零下载 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+
+  /* ── 阴影 ──
+     纸面世界默认是平的。阴影只做两件事：把卡片坐实在宣纸上，或给 Hero 打光。 */
+  --shadow-brand-sm: 0 2px 4px -1px rgb(var(--shadow-rgb) / .06), 0 1px 2px -1px rgb(var(--shadow-rgb) / .04);
+  --shadow-brand-md: 0 4px 6px -1px rgb(var(--shadow-rgb) / .10), 0 2px 4px -2px rgb(var(--shadow-rgb) / .05);
+
+  /* ── 缓动 ── */
+  --ease-brand: cubic-bezier(.16, 1, .3, 1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+}
