@@ -44,6 +44,13 @@
             "label": "次按钮"
           },
           "type": "Link"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "留空则不生成锚点"
+          },
+          "type": "Text"
         }
       },
       "version": ""
@@ -94,6 +101,13 @@
             "label": "配图"
           },
           "type": "Image"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "留空则不生成锚点"
+          },
+          "type": "Text"
         }
       },
       "version": ""

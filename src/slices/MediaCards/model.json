@@ -1,0 +1,94 @@
+{
+  "id": "media_cards",
+  "name": "MediaCards",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "引言",
+            "multi": "paragraph,strong,em"
+          },
+          "type": "StructuredText"
+        },
+        "columns": {
+          "config": {
+            "default_value": "3",
+            "label": "每行列数",
+            "options": [
+              "2",
+              "3"
+            ]
+          },
+          "type": "Select"
+        },
+        "layout": {
+          "config": {
+            "default_value": "imageFirst",
+            "label": "图文顺序",
+            "options": [
+              "imageFirst",
+              "textFirst"
+            ]
+          },
+          "type": "Select"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "如 today，留空则不生成锚点"
+          },
+          "type": "Text"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "eyebrow": {
+                "config": {
+                  "label": "眉标",
+                  "placeholder": "如 照护者这边"
+                },
+                "type": "Text"
+              },
+              "title": {
+                "config": {
+                  "label": "标题"
+                },
+                "type": "Text"
+              },
+              "body": {
+                "config": {
+                  "label": "说明",
+                  "multi": "paragraph,strong,em"
+                },
+                "type": "StructuredText"
+              },
+              "image": {
+                "config": {
+                  "label": "配图"
+                },
+                "type": "Image"
+              }
+            },
+            "label": "条目"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

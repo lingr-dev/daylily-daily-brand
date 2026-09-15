@@ -65,6 +65,156 @@
         }
       },
       "version": ""
+    },
+    {
+      "description": "Card",
+      "docURL": "",
+      "id": "card",
+      "imageUrl": "",
+      "name": "Card",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "引言",
+            "multi": "paragraph,strong,em"
+          },
+          "type": "StructuredText"
+        },
+        "columns": {
+          "config": {
+            "default_value": "2",
+            "label": "每行列数",
+            "options": [
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "type": "Select"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "如 philosophy，留空则不生成锚点"
+          },
+          "type": "Text"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "icon": {
+                "config": {
+                  "label": "图标",
+                  "options": [
+                    "translate-2",
+                    "time-line",
+                    "battery-low-line",
+                    "eye-line",
+                    "lock-2-line",
+                    "sun-cloudy-line",
+                    "parent-line",
+                    "question-answer-line",
+                    "wechat-line"
+                  ]
+                },
+                "type": "Select"
+              },
+              "title": {
+                "config": {
+                  "label": "标题"
+                },
+                "type": "Text"
+              },
+              "description": {
+                "config": {
+                  "label": "描述",
+                  "multi": "paragraph,strong,em,hyperlink"
+                },
+                "type": "StructuredText"
+              }
+            },
+            "label": "条目"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
+    },
+    {
+      "description": "Quote",
+      "docURL": "",
+      "id": "quote",
+      "imageUrl": "",
+      "name": "Quote",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "如 details，留空则不生成锚点"
+          },
+          "type": "Text"
+        },
+        "items": {
+          "config": {
+            "fields": {
+              "icon": {
+                "config": {
+                  "label": "图标",
+                  "options": [
+                    "translate-2",
+                    "time-line",
+                    "battery-low-line",
+                    "eye-line",
+                    "lock-2-line",
+                    "sun-cloudy-line",
+                    "parent-line",
+                    "question-answer-line",
+                    "wechat-line"
+                  ]
+                },
+                "type": "Select"
+              },
+              "title": {
+                "config": {
+                  "label": "标题"
+                },
+                "type": "Text"
+              },
+              "quote": {
+                "config": {
+                  "label": "引述",
+                  "placeholder": "产品里的一句原话"
+                },
+                "type": "Text"
+              },
+              "description": {
+                "config": {
+                  "label": "说明",
+                  "multi": "paragraph,strong,em"
+                },
+                "type": "StructuredText"
+              }
+            },
+            "label": "条目"
+          },
+          "type": "Group"
+        }
+      },
+      "version": ""
     }
   ]
 }

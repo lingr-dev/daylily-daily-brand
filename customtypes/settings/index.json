@@ -143,21 +143,21 @@
       },
       "miniprogram_qr_title": {
         "config": {
-          "label": "扫码弹窗标题",
+          "label": "扫码区标题",
           "placeholder": "微信扫码打开"
         },
         "type": "Text"
       },
       "miniprogram_qr_description": {
         "config": {
-          "label": "扫码弹窗说明",
+          "label": "扫码区说明",
           "placeholder": "使用微信扫描下方二维码，即可打开小程序。"
         },
         "type": "Text"
       },
       "miniprogram_qr_note": {
         "config": {
-          "label": "扫码弹窗脚注",
+          "label": "扫码区脚注",
           "placeholder": "已上线，扫码即可在微信中使用"
         },
         "type": "Text"

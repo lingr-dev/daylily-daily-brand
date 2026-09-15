@@ -32,6 +32,12 @@
             },
             "faq": {
               "type": "SharedSlice"
+            },
+            "media_cards": {
+              "type": "SharedSlice"
+            },
+            "callout": {
+              "type": "SharedSlice"
             }
           }
         },

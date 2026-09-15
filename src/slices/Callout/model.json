@@ -1,0 +1,47 @@
+{
+  "id": "callout",
+  "name": "Callout",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "description": "Default",
+      "docURL": "",
+      "id": "default",
+      "imageUrl": "",
+      "name": "Default",
+      "primary": {
+        "icon": {
+          "config": {
+            "label": "图标",
+            "options": [
+              "translate-2",
+              "time-line",
+              "battery-low-line",
+              "eye-line",
+              "lock-2-line",
+              "sun-cloudy-line",
+              "parent-line",
+              "question-answer-line",
+              "wechat-line"
+            ]
+          },
+          "type": "Select"
+        },
+        "title": {
+          "config": {
+            "label": "标题"
+          },
+          "type": "Text"
+        },
+        "body": {
+          "config": {
+            "label": "正文",
+            "multi": "paragraph,strong,em,hyperlink"
+          },
+          "type": "StructuredText"
+        }
+      },
+      "version": ""
+    }
+  ]
+}

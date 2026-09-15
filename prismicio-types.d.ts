@@ -46,7 +46,7 @@ type ContentRelationshipFieldWithData<
 		>
 }[Exclude<TCustomType[number], string>["id"]];
 
-type HomepageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | StatsSlice | LogoWallSlice | ImageTextSlice | TestimonialSlice | CtaBannerSlice | FaqSlice
+type HomepageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | StatsSlice | LogoWallSlice | ImageTextSlice | TestimonialSlice | CtaBannerSlice | FaqSlice | MediaCardsSlice | CalloutSlice
 
 /**
  * Content for Homepage documents
@@ -270,7 +270,7 @@ interface NewsPostDocumentData {
  */
 export type NewsPostDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<Simplify<NewsPostDocumentData>, "news_post", Lang>;
 
-type PageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | StatsSlice | LogoWallSlice | ImageTextSlice | TestimonialSlice | CtaBannerSlice | FaqSlice
+type PageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | StatsSlice | LogoWallSlice | ImageTextSlice | TestimonialSlice | CtaBannerSlice | FaqSlice | MediaCardsSlice | CalloutSlice
 
 /**
  * Content for Page documents
@@ -545,7 +545,7 @@ interface SettingsDocumentData {
 	miniprogram_qrcode: prismic.ImageField<never>;
 	
 	/**
-	 * 扫码弹窗标题 field in *Settings*
+	 * 扫码区标题 field in *Settings*
 	 *
 	 * - **Field Type**: Text
 	 * - **Placeholder**: 微信扫码打开
@@ -556,7 +556,7 @@ interface SettingsDocumentData {
 	miniprogram_qr_title: prismic.KeyTextField;
 	
 	/**
-	 * 扫码弹窗说明 field in *Settings*
+	 * 扫码区说明 field in *Settings*
 	 *
 	 * - **Field Type**: Text
 	 * - **Placeholder**: 使用微信扫描下方二维码，即可打开小程序。
@@ -567,7 +567,7 @@ interface SettingsDocumentData {
 	miniprogram_qr_description: prismic.KeyTextField;
 	
 	/**
-	 * 扫码弹窗脚注 field in *Settings*
+	 * 扫码区脚注 field in *Settings*
 	 *
 	 * - **Field Type**: Text
 	 * - **Placeholder**: 已上线，扫码即可在微信中使用
@@ -590,6 +590,64 @@ interface SettingsDocumentData {
 export type SettingsDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<SettingsDocumentData>, "settings", Lang>;
 
 export type AllDocumentTypes = HomepageDocument | NewsIndexDocument | NewsPostDocument | PageDocument | SettingsDocument;
+
+/**
+ * Primary content in *Callout → Default → Primary*
+ */
+export interface CalloutSliceDefaultPrimary {
+	/**
+	 * 图标 field in *Callout → Default → Primary*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: callout.default.primary.icon
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	icon: prismic.SelectField<"translate-2" | "time-line" | "battery-low-line" | "eye-line" | "lock-2-line" | "sun-cloudy-line" | "parent-line" | "question-answer-line" | "wechat-line">;
+	
+	/**
+	 * 标题 field in *Callout → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: callout.default.primary.title
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	title: prismic.KeyTextField;
+	
+	/**
+	 * 正文 field in *Callout → Default → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: callout.default.primary.body
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	body: prismic.RichTextField;
+}
+
+/**
+ * Default variation for Callout Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type CalloutSliceDefault = prismic.SharedSliceVariation<"default", Simplify<CalloutSliceDefaultPrimary>, never>;
+
+/**
+ * Slice variation for *Callout*
+ */
+type CalloutSliceVariation = CalloutSliceDefault
+
+/**
+ * Callout Shared Slice
+ *
+ * - **API ID**: `callout`
+ * - **Description**: *None*
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type CalloutSlice = prismic.SharedSlice<"callout", CalloutSliceVariation>;
 
 /**
  * Primary content in *Cta Banner → Default → Primary*
@@ -646,9 +704,84 @@ export interface CtaBannerSliceDefaultPrimary {
 export type CtaBannerSliceDefault = prismic.SharedSliceVariation<"default", Simplify<CtaBannerSliceDefaultPrimary>, never>;
 
 /**
+ * Primary content in *Cta Banner → Light → Primary*
+ */
+export interface CtaBannerSliceLightPrimary {
+	/**
+	 * 标题 field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: cta_banner.light.primary.heading
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	heading: prismic.RichTextField;
+	
+	/**
+	 * 副文案 field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: cta_banner.light.primary.body
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	body: prismic.RichTextField;
+	
+	/**
+	 * 主按钮 field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: cta_banner.light.primary.primary_link
+	 * - **Documentation**: https://prismic.io/docs/fields/link
+	 */
+	primary_link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
+	 * 次按钮 field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: cta_banner.light.primary.secondary_link
+	 * - **Documentation**: https://prismic.io/docs/fields/link
+	 */
+	secondary_link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
+	 * 展示小程序二维码 field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Boolean
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: true
+	 * - **API ID Path**: cta_banner.light.primary.show_qrcode
+	 * - **Documentation**: https://prismic.io/docs/fields/boolean
+	 */
+	show_qrcode: prismic.BooleanField;
+	
+	/**
+	 * 锚点 ID field in *Cta Banner → Light → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 如 cta，导航栏按钮靠它定位
+	 * - **API ID Path**: cta_banner.light.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
+}
+
+/**
+ * Light variation for Cta Banner Slice
+ *
+ * - **API ID**: `light`
+ * - **Description**: Light
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type CtaBannerSliceLight = prismic.SharedSliceVariation<"light", Simplify<CtaBannerSliceLightPrimary>, never>;
+
+/**
  * Slice variation for *Cta Banner*
  */
-type CtaBannerSliceVariation = CtaBannerSliceDefault
+type CtaBannerSliceVariation = CtaBannerSliceDefault | CtaBannerSliceLight
 
 /**
  * Cta Banner Shared Slice
@@ -768,6 +901,86 @@ export interface FeatureGridSliceDefaultPrimaryItemsItem {
 }
 
 /**
+ * Item in *Feature Grid → Card → Primary → 条目*
+ */
+export interface FeatureGridSliceCardPrimaryItemsItem {
+	/**
+	 * 图标 field in *Feature Grid → Card → Primary → 条目*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.items[].icon
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	icon: prismic.SelectField<"translate-2" | "time-line" | "battery-low-line" | "eye-line" | "lock-2-line" | "sun-cloudy-line" | "parent-line" | "question-answer-line" | "wechat-line">;
+	
+	/**
+	 * 标题 field in *Feature Grid → Card → Primary → 条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.items[].title
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	title: prismic.KeyTextField;
+	
+	/**
+	 * 描述 field in *Feature Grid → Card → Primary → 条目*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.items[].description
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	description: prismic.RichTextField;
+}
+
+/**
+ * Item in *Feature Grid → Quote → Primary → 条目*
+ */
+export interface FeatureGridSliceQuotePrimaryItemsItem {
+	/**
+	 * 图标 field in *Feature Grid → Quote → Primary → 条目*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.quote.primary.items[].icon
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	icon: prismic.SelectField<"translate-2" | "time-line" | "battery-low-line" | "eye-line" | "lock-2-line" | "sun-cloudy-line" | "parent-line" | "question-answer-line" | "wechat-line">;
+	
+	/**
+	 * 标题 field in *Feature Grid → Quote → Primary → 条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.quote.primary.items[].title
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	title: prismic.KeyTextField;
+	
+	/**
+	 * 引述 field in *Feature Grid → Quote → Primary → 条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 产品里的一句原话
+	 * - **API ID Path**: feature_grid.quote.primary.items[].quote
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	quote: prismic.KeyTextField;
+	
+	/**
+	 * 说明 field in *Feature Grid → Quote → Primary → 条目*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.quote.primary.items[].description
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	description: prismic.RichTextField;
+}
+
+/**
  * Primary content in *Feature Grid → Default → Primary*
  */
 export interface FeatureGridSliceDefaultPrimary {
@@ -823,9 +1036,118 @@ export interface FeatureGridSliceDefaultPrimary {
 export type FeatureGridSliceDefault = prismic.SharedSliceVariation<"default", Simplify<FeatureGridSliceDefaultPrimary>, never>;
 
 /**
+ * Primary content in *Feature Grid → Card → Primary*
+ */
+export interface FeatureGridSliceCardPrimary {
+	/**
+	 * 标题 field in *Feature Grid → Card → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.heading
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	heading: prismic.RichTextField;
+	
+	/**
+	 * 引言 field in *Feature Grid → Card → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.body
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	body: prismic.RichTextField;
+	
+	/**
+	 * 每行列数 field in *Feature Grid → Card → Primary*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: 2
+	 * - **API ID Path**: feature_grid.card.primary.columns
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	columns: prismic.SelectField<"2" | "3" | "4", "filled">;
+	
+	/**
+	 * 锚点 ID field in *Feature Grid → Card → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 如 philosophy，留空则不生成锚点
+	 * - **API ID Path**: feature_grid.card.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
+	
+	/**
+	 * 条目 field in *Feature Grid → Card → Primary*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.card.primary.items[]
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	items: prismic.GroupField<Simplify<FeatureGridSliceCardPrimaryItemsItem>>;
+}
+
+/**
+ * Card variation for Feature Grid Slice
+ *
+ * - **API ID**: `card`
+ * - **Description**: Card
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type FeatureGridSliceCard = prismic.SharedSliceVariation<"card", Simplify<FeatureGridSliceCardPrimary>, never>;
+
+/**
+ * Primary content in *Feature Grid → Quote → Primary*
+ */
+export interface FeatureGridSliceQuotePrimary {
+	/**
+	 * 标题 field in *Feature Grid → Quote → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.quote.primary.heading
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	heading: prismic.RichTextField;
+	
+	/**
+	 * 锚点 ID field in *Feature Grid → Quote → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 如 details，留空则不生成锚点
+	 * - **API ID Path**: feature_grid.quote.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
+	
+	/**
+	 * 条目 field in *Feature Grid → Quote → Primary*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: feature_grid.quote.primary.items[]
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	items: prismic.GroupField<Simplify<FeatureGridSliceQuotePrimaryItemsItem>>;
+}
+
+/**
+ * Quote variation for Feature Grid Slice
+ *
+ * - **API ID**: `quote`
+ * - **Description**: Quote
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type FeatureGridSliceQuote = prismic.SharedSliceVariation<"quote", Simplify<FeatureGridSliceQuotePrimary>, never>;
+
+/**
  * Slice variation for *Feature Grid*
  */
-type FeatureGridSliceVariation = FeatureGridSliceDefault
+type FeatureGridSliceVariation = FeatureGridSliceDefault | FeatureGridSliceCard | FeatureGridSliceQuote
 
 /**
  * Feature Grid Shared Slice
@@ -889,6 +1211,16 @@ export interface HeroSliceDefaultPrimary {
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
 	secondary_link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
+	 * 锚点 ID field in *Hero → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 留空则不生成锚点
+	 * - **API ID Path**: hero.default.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
 }
 
 /**
@@ -963,6 +1295,16 @@ export interface HeroSliceWithImagePrimary {
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	image: prismic.ImageField<never>;
+	
+	/**
+	 * 锚点 ID field in *Hero → With Image → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 留空则不生成锚点
+	 * - **API ID Path**: hero.withImage.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
 }
 
 /**
@@ -1192,6 +1534,141 @@ type LogoWallSliceVariation = LogoWallSliceDefault
  * - **Documentation**: https://prismic.io/docs/slices
  */
 export type LogoWallSlice = prismic.SharedSlice<"logo_wall", LogoWallSliceVariation>;
+
+/**
+ * Item in *MediaCards → Default → Primary → 条目*
+ */
+export interface MediaCardsSliceDefaultPrimaryItemsItem {
+	/**
+	 * 眉标 field in *MediaCards → Default → Primary → 条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 如 照护者这边
+	 * - **API ID Path**: media_cards.default.primary.items[].eyebrow
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	eyebrow: prismic.KeyTextField;
+	
+	/**
+	 * 标题 field in *MediaCards → Default → Primary → 条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.items[].title
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	title: prismic.KeyTextField;
+	
+	/**
+	 * 说明 field in *MediaCards → Default → Primary → 条目*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.items[].body
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	body: prismic.RichTextField;
+	
+	/**
+	 * 配图 field in *MediaCards → Default → Primary → 条目*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.items[].image
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	image: prismic.ImageField<never>;
+}
+
+/**
+ * Primary content in *MediaCards → Default → Primary*
+ */
+export interface MediaCardsSliceDefaultPrimary {
+	/**
+	 * 标题 field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.heading
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	heading: prismic.RichTextField;
+	
+	/**
+	 * 引言 field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.body
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	body: prismic.RichTextField;
+	
+	/**
+	 * 每行列数 field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: 3
+	 * - **API ID Path**: media_cards.default.primary.columns
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	columns: prismic.SelectField<"2" | "3", "filled">;
+	
+	/**
+	 * 图文顺序 field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: imageFirst
+	 * - **API ID Path**: media_cards.default.primary.layout
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	layout: prismic.SelectField<"imageFirst" | "textFirst", "filled">;
+	
+	/**
+	 * 锚点 ID field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 如 today，留空则不生成锚点
+	 * - **API ID Path**: media_cards.default.primary.anchor_id
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	anchor_id: prismic.KeyTextField;
+	
+	/**
+	 * 条目 field in *MediaCards → Default → Primary*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: media_cards.default.primary.items[]
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	items: prismic.GroupField<Simplify<MediaCardsSliceDefaultPrimaryItemsItem>>;
+}
+
+/**
+ * Default variation for MediaCards Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type MediaCardsSliceDefault = prismic.SharedSliceVariation<"default", Simplify<MediaCardsSliceDefaultPrimary>, never>;
+
+/**
+ * Slice variation for *MediaCards*
+ */
+type MediaCardsSliceVariation = MediaCardsSliceDefault
+
+/**
+ * MediaCards Shared Slice
+ *
+ * - **API ID**: `media_cards`
+ * - **Description**: *None*
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type MediaCardsSlice = prismic.SharedSlice<"media_cards", MediaCardsSliceVariation>;
 
 /**
  * Primary content in *Rich Text → Default → Primary*
@@ -1438,10 +1915,16 @@ declare module "@prismicio/client" {
 			SettingsDocumentData,
 			SettingsDocumentDataSocialLinksItem,
 			AllDocumentTypes,
+			CalloutSlice,
+			CalloutSliceDefaultPrimary,
+			CalloutSliceVariation,
+			CalloutSliceDefault,
 			CtaBannerSlice,
 			CtaBannerSliceDefaultPrimary,
+			CtaBannerSliceLightPrimary,
 			CtaBannerSliceVariation,
 			CtaBannerSliceDefault,
+			CtaBannerSliceLight,
 			FaqSlice,
 			FaqSliceDefaultPrimaryItemsItem,
 			FaqSliceDefaultPrimary,
@@ -1450,8 +1933,14 @@ declare module "@prismicio/client" {
 			FeatureGridSlice,
 			FeatureGridSliceDefaultPrimaryItemsItem,
 			FeatureGridSliceDefaultPrimary,
+			FeatureGridSliceCardPrimaryItemsItem,
+			FeatureGridSliceCardPrimary,
+			FeatureGridSliceQuotePrimaryItemsItem,
+			FeatureGridSliceQuotePrimary,
 			FeatureGridSliceVariation,
 			FeatureGridSliceDefault,
+			FeatureGridSliceCard,
+			FeatureGridSliceQuote,
 			HeroSlice,
 			HeroSliceDefaultPrimary,
 			HeroSliceWithImagePrimary,
@@ -1469,6 +1958,11 @@ declare module "@prismicio/client" {
 			LogoWallSliceDefaultPrimary,
 			LogoWallSliceVariation,
 			LogoWallSliceDefault,
+			MediaCardsSlice,
+			MediaCardsSliceDefaultPrimaryItemsItem,
+			MediaCardsSliceDefaultPrimary,
+			MediaCardsSliceVariation,
+			MediaCardsSliceDefault,
 			RichTextSlice,
 			RichTextSliceDefaultPrimary,
 			RichTextSliceVariation,

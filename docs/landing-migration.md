@@ -13,7 +13,7 @@ Prismic 内容架构上，成为 `homepage` 单例的内容；同时把本站的
 | # | 决策点 | 结论 |
 | --- | --- | --- |
 | 1 | UI 样机怎么迁 | **用截图**，不在品牌站重写 HTML 手绘样机 |
-| 2 | 二维码弹窗 | **不做弹窗**，二维码就地展示，保持零 client 组件 |
+| 2 | 二维码弹窗 | **不做弹窗**，二维码就地展示，保持零 client 组件（2026-09-15 复核后维持，见 §4A） |
 | 3 | 图标 | **Select 枚举 + 代码侧内联 SVG**，不引图标字体 |
 | 4 | 视觉令牌 | **采用 `uiux/` 的设计令牌系统**，见 §3 |
 | 5 | 图片托管 | **外部图床**，不入 Prismic 媒体库，见 §6 |
@@ -313,6 +313,37 @@ Songti SC 与 Windows 的 SimSun（宋体）—— 两者观感差距很大，Wi
 
 ---
 
+## 4A. 与另一台机器上的建模会合（2026-09-15）
+
+合并时发现 `origin/main` 已有提交 `0f6bcd0 feat(prismic): settings 单例补齐小程序入口、
+备案与统计字段`，与本方案 §4 / §7 大幅重叠。文件上零交集，rebase 干净；内容上做如下归并：
+
+**直接采用上游形态**（比方案原先的设计更好，方案已改）：
+
+| 上游已建 | 方案原先写的 | 为什么采用上游 |
+| --- | --- | --- |
+| `police_license_link`（Link） | `police_record_code`（Text） | 直接存链接，不用在代码里拼 `beian.gov.cn` 的查询 URL |
+| `baidu_analytics_id`（Text，在 settings） | 走 `NEXT_PUBLIC_*` env | 换统计 ID 不用改代码、不用重设 CI |
+| `miniprogram_icp_license` | `miniprogram_license` | 同一件事，沿用上游命名 |
+
+**一处设计冲突，已复核并维持决策 2。** 上游建的「小程序」tab 里，三个字段的 label
+写的是「扫码**弹窗**标题 / 说明 / 脚注」，并配 `miniprogram_cta_label` + `miniprogram_qrcode`
+—— 这是按弹窗设计建的模。而决策 2 是「不做弹窗，二维码就地展示，保持零 client 组件」。
+
+Human 2026-09-15 复核后维持决策 2。字段本身两种设计都能用（标题/说明/脚注这三段内容，
+放弹窗里和放页面区块里是同一份），所以**不删字段，只把 label 的「弹窗」改成「扫码区」**，
+免得下一个人照着 label 又去做弹窗。
+
+由此定下二维码的归属：**内容在 `settings`，不在 slice 里**。它是站点级的东西，
+导航栏按钮与底部 CTA 指向同一份。`cta_banner/light` 只加一个 `show_qrcode` 开关，
+二维码本身经 `SliceZone` 的 `context` 从 settings 传进去 ——
+`CLAUDE.md` 明确「数据一律由 page 取好后经 context 或直接在 page 层组装」。
+
+导航栏按钮：文案取 `miniprogram_cta_label`，`href` 是指向 `cta_banner/light`
+的 `anchor_id` 的站内锚点。不需要额外的 `header_cta` Link 字段。
+
+---
+
 ## 4. 内容模型改动（一律走 CLI）
 
 `CLAUDE.md` 硬约束：**绝不手改** `customtypes/**/index.json`、`src/slices/*/model.json`、
@@ -476,7 +507,7 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
 | title / description / keywords | 现有 `buildMetadata` 已覆盖前两项；keywords 走 Next metadata 的 `keywords`，值放 `homepage` 的新字段或 `settings`。**取值按 §6A 的新词表**，不要沿用原型的「健康小记」 |
 | OG | 现有 `seo.ts` 已处理，且刻意指向本站 jpeg 副本 —— 抓取器在国内访问海外域名常超时 |
 | JSON-LD | **代码侧生成**，`src/lib/jsonld.ts` 由 `settings` 拼出 `SoftwareApplication`。不入 CMS —— 把 JSON 塞进 Text 字段太脆，编辑一不小心就是语法错误且构建不报错 |
-| 百度统计 | `layout.tsx` 里 `next/script` + `afterInteractive`，静态导出兼容。站点 ID 走 `NEXT_PUBLIC_*` env |
+| 百度统计 | `layout.tsx` 里 `next/script` + `afterInteractive`，静态导出兼容。站点 ID 取自 `settings.baidu_analytics_id`（上游已建，见 §4A），不走 env |
 | `llms.txt` | `public/llms.txt` 静态文件，从原型目录拷贝后按品牌站口径校订 |
 
 ---
@@ -491,7 +522,10 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
 3. ✅ **Icon 组件**（2026-09-15）：`src/components/Icon.tsx`，9 个内联 SVG，
    路径数据从 Remix Icon 4.2.0 原样取出并逐字节比对。导出的 `iconNames`
    就是第 4 步建模时 `icon` 字段的 Select 选项值。
-4. **内容模型**（§4）：CLI 建模 → `gen types` → `push`。
+4. 🔶 **内容模型**（§4）：CLI 建模与 `gen types` 已完成（2026-09-15），
+   **`npx prismic push` 尚未执行** —— `prismic login` 是交互式的，需要 Human 跑一次。
+   push 之前 Prismic 仓库里一个自定义类型都没有，`pnpm build:next` 会一直报
+   `[Link resolver error] Unknown type`。
 5. **slice 组件**：FeatureGrid 两变体 → MediaCards → Callout → CtaBanner light → Hero。
 6. **壳层**：SiteHeader CTA、SiteFooter 备案、layout 统计与 JSON-LD。
 7. **内容录入**：`homepage` 单例约 20 段文案。手工可行但易错；若之后还要重建或换环境，
@@ -500,10 +534,11 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
 9. **验证**：
 
 ```sh
-pnpm tokens:check
+pnpm tokens:check     # 令牌是否与 uiux 漂移
 pnpm typecheck && pnpm lint
-pnpm build:next     # 不需要 Prismic 连接也能验证类型与静态导出约束
-pnpm build          # 完整构建（需要 Prismic 连接）
+pnpm build:next       # 类型与静态导出约束
+pnpm classes:check    # 拿真实编译产物核对每个 className，见 §9 第 9 条
+pnpm build            # 完整构建（需要 Prismic 连接）
 ```
 
 第 2 步是可以独立验收的安全点 —— 如果后面的工作要中断，站点处于一个自洽状态。

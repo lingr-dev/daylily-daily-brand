@@ -40,6 +40,60 @@
         }
       },
       "version": ""
+    },
+    {
+      "description": "Light",
+      "docURL": "",
+      "id": "light",
+      "imageUrl": "",
+      "name": "Light",
+      "primary": {
+        "heading": {
+          "config": {
+            "label": "标题",
+            "single": "heading2"
+          },
+          "type": "StructuredText"
+        },
+        "body": {
+          "config": {
+            "label": "副文案",
+            "multi": "paragraph,strong,em"
+          },
+          "type": "StructuredText"
+        },
+        "primary_link": {
+          "config": {
+            "allowText": true,
+            "label": "主按钮"
+          },
+          "type": "Link"
+        },
+        "secondary_link": {
+          "config": {
+            "allowText": true,
+            "label": "次按钮"
+          },
+          "type": "Link"
+        },
+        "show_qrcode": {
+          "config": {
+            "default_value": true,
+            "label": "展示小程序二维码",
+            "placeholder_false": "不展示",
+            "placeholder_true": "展示"
+          },
+          "type": "Boolean"
+        },
+        "anchor_id": {
+          "config": {
+            "label": "锚点 ID",
+            "placeholder": "如 cta，导航栏按钮靠它定位"
+          },
+          "type": "Text"
+        }
+      },
+      "version": ""
     }
   ]
 }
