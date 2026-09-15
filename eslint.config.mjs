@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    // 只读 submodule。它们是别的仓库的交付物（原型页里还 vendor 了一份
+    // 407KB 的 tailwind.min.js），既不该由本仓库的规则评判，也改不了 ——
+    // 不排除的话 `pnpm lint` 永远是红的，CLAUDE.md 里那条验证步骤就成了摆设。
+    "uiux/**",
+    "req-specs/**",
   ]),
 ]);
 
