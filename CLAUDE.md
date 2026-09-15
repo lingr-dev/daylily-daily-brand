@@ -121,7 +121,19 @@ npx prismic docs list       # 官方文档可离线查
 改完至少跑：
 
 ```sh
+pnpm tokens:check                 # 令牌是否与 uiux 漂移
 pnpm typecheck && pnpm lint
-pnpm build:next     # 不需要 Prismic 连接也能验证类型与静态导出约束
-pnpm build          # 完整构建（需要 Prismic 连接）
+pnpm build:next                   # 类型与静态导出约束
+pnpm classes:check                # 依赖上一步的产物，见下
+pnpm build                        # 完整构建（需要 Prismic 连接）
 ```
+
+**`classes:check` 不能省。** 无效的 Tailwind 类是**静默忽略**的 —— 不报错、
+不警告，页面只是少了那个样式，`typecheck` 和 `lint` 一个都拦不住。
+本仓库在一次批量换词里就这样漏过 `bg-surface-container-base` 与
+`bg-surface-container-container` 两处。这个脚本把 `src/` 里每个 `className`
+token 拿去真实编译产物里核对，所以必须先 `pnpm build:next` 产出 CSS。
+
+注：`pnpm build:next` 目前会在收集页面数据时失败 —— Prismic 仓库里还没有
+自定义类型，link resolver 报 `Unknown type`。CSS 在那之前已经产出，
+`classes:check` 不受影响。`npx prismic push` 之后这条应当恢复正常，届时复核本节。
