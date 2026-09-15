@@ -30,7 +30,7 @@ export default function Stats({ slice }: StatsProps) {
       className="py-section"
     >
       <Container>
-        <div className="rounded-card border border-line bg-surface px-6 py-12 md:px-12">
+        <div className="rounded-card border border-hair bg-surface-container px-6 py-12 md:px-12">
           {isFilled.richText(heading) && (
             <div className="max-w-2xl">
               <RichText field={heading} />
@@ -45,14 +45,14 @@ export default function Stats({ slice }: StatsProps) {
             >
               {items.map((item, index) => (
                 <div key={index}>
-                  <dd className="text-display-sm font-semibold tracking-tight text-brand-600">
+                  <dd className="text-title-1 font-semibold tracking-tight text-brand-deep">
                     {item.value}
                   </dd>
-                  <dt className="mt-2 text-base font-medium text-ink">
+                  <dt className="mt-2 text-base font-medium text-content-primary">
                     {item.label}
                   </dt>
                   {item.description && (
-                    <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                    <p className="mt-1 text-sm leading-relaxed text-content-secondary">
                       {item.description}
                     </p>
                   )}

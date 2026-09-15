@@ -26,17 +26,17 @@ export default function Faq({ slice }: FaqProps) {
           {isFilled.richText(heading) && <RichText field={heading} />}
 
           <div
-            className={`divide-y divide-line border-y border-line ${
+            className={`divide-y divide-hair border-y border-hair ${
               isFilled.richText(heading) ? "mt-10" : ""
             }`}
           >
             {filled.map((item, index) => (
               <details key={index} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-medium text-ink [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-medium text-content-primary [&::-webkit-details-marker]:hidden">
                   <span>{item.question}</span>
                   <span
                     aria-hidden="true"
-                    className="mt-1 shrink-0 text-ink-subtle transition-transform duration-200 group-open:rotate-45"
+                    className="mt-1 shrink-0 text-content-muted transition-transform duration-200 group-open:rotate-45"
                   >
                     +
                   </span>

@@ -3,10 +3,10 @@ import type { LinkField } from "@prismicio/client";
 
 const variants = {
   primary:
-    "bg-brand-600 text-white hover:bg-brand-700 focus-visible:outline-brand-700",
+    "bg-marketing-peach text-content-primary hover:bg-marketing-peach/85 focus-visible:outline-brand-deep",
   secondary:
-    "border border-line-strong text-ink hover:border-ink hover:bg-surface",
-  ghost: "text-brand-600 hover:text-brand-700",
+    "border border-sand text-content-primary hover:border-content-primary hover:bg-surface-container",
+  ghost: "text-brand-deep hover:text-content-primary",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;

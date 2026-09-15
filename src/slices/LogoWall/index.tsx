@@ -20,7 +20,7 @@ export default function LogoWall({ slice }: LogoWallProps) {
     >
       <Container>
         {heading && (
-          <p className="text-center text-sm text-ink-subtle">{heading}</p>
+          <p className="text-center text-sm text-content-muted">{heading}</p>
         )}
 
         <ul

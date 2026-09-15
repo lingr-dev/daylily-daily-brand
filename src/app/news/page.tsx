@@ -35,7 +35,7 @@ export default async function NewsIndexPage() {
 
       <Container className="py-section">
         {posts.length === 0 ? (
-          <p className="text-ink-muted">暂无内容。</p>
+          <p className="text-content-secondary">暂无内容。</p>
         ) : (
           <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (

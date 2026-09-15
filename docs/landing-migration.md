@@ -486,8 +486,8 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
 1. ✅ **令牌同步**（§3.3–3.5）：`sync-tokens.mts` + 生成物 + `tokens:check`。
    **生成物尚未接进 `globals.css`** —— 接线属于第 2 步，因为接上的同时就必须换词，
    否则两套词汇并存正是 §3.4 排除掉的方案 C。
-2. **全站换词**：9 个 slice + 5 个组件的类名对齐，`CLAUDE.md` 样式章节重写。
-   这一步做完站点应当与改动前**视觉等价地**跑通（只是换了皮），先验一次。
+2. ✅ **全站换词**（2026-09-15）：17 个文件的类名对齐，`globals.css` 接线，
+   `CLAUDE.md` 样式章节重写。站点现在是「换了皮」的状态：蓝白 → 宣纸墨色。
 3. **Icon 组件**：9 个内联 SVG。后面三个 slice 都依赖它。
 4. **内容模型**（§4）：CLI 建模 → `gen types` → `push`。
 5. **slice 组件**：FeatureGrid 两变体 → MediaCards → Callout → CtaBanner light → Hero。
@@ -542,6 +542,22 @@ pnpm build          # 完整构建（需要 Prismic 连接）
    22 个 error + 1560 个 warning。只读 submodule 不该由本仓库的规则评判，也改不了；
    已在 `eslint.config.mjs` 的 `globalIgnores` 里排除 `uiux/**` 与 `req-specs/**`。
 
-8. **submodule 只拉一级。** `tokens:check` 依赖 `uiux/` 已 checkout；
+8. **Tailwind 的 content 自动探测会扫进 submodule**（已修，2026-09-15）。
+   v4 默认从项目根探测，而 `uiux/` 与 `req-specs/` 是 checkout 在仓库里、
+   又不在 `.gitignore` 里的 submodule，于是原型页的类名被一并收进产物 ——
+   实测多出 `text-6xl` / `min-h-screen` / `animate-pulse` / `blur-3xl` 等本站
+   根本不用的规则，CSS 从 5.3KB 涨到 15.3KB gzip（raw 23.2KB → 88.5KB）。
+   已在 `globals.css` 用 `source(none)` + `@source "../"` 限定只扫 `src/`。
+   与第 7 条同源：两者都是挂 submodule 时带进来的副作用。
+
+9. **`text-ink` 之类的旧类名靠 typecheck / lint 抓不住。**
+   换词过程中有两处被替换顺序打成 `bg-surface-container-base` 与
+   `bg-surface-container-container`（`bg-canvas → bg-surface-base` 之后
+   `bg-surface → bg-surface-container` 又命中了自己的产物），而 typecheck 与
+   lint 全部通过 —— 无效的 Tailwind 类是**静默忽略**的，不报错、不警告。
+   这类改动必须拿真实编译产物核对：把 `src/` 里每个 `className` token 取出来，
+   逐个在 `.next` 产出的 CSS 里找对应规则。本次 205 个类名全部命中。
+
+10. **submodule 只拉一级。** `tokens:check` 依赖 `uiux/` 已 checkout；
    同步只用 `git submodule sync` 和 `git submodule update --init`，**禁止 `--recursive`**。
    `uiux` 内嵌套的 `req-specs/` 保持未初始化是预期状态。

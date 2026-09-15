@@ -51,7 +51,7 @@ export default function FeatureGrid({ slice }: FeatureGridProps) {
                 )}
                 {item.title && (
                   <h3
-                    className={`text-lg font-semibold text-ink ${
+                    className={`text-lg font-semibold text-content-primary ${
                       isFilled.image(item.icon) ? "mt-5" : ""
                     }`}
                   >

@@ -37,7 +37,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-dvh flex-col">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-canvas focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface-base focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
         >
           跳到主内容
         </a>
@@ -47,7 +47,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           迟早有人把预发链接当正式链接发出去。
         */}
         {isReleaseBuild && (
-          <div className="bg-brand-900 px-4 py-2 text-center text-xs text-brand-100">
+          <div className="bg-content-primary px-4 py-2 text-center text-xs text-sand">
             预发环境 · 内容取自未发布的 Release，请勿对外分享此链接
           </div>
         )}

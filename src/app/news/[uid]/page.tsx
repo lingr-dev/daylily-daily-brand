@@ -21,31 +21,31 @@ export default async function NewsPostPage({
       <Container className="py-section">
         <Link
           href="/news/"
-          className="text-sm text-ink-muted transition-colors hover:text-ink"
+          className="text-sm text-content-secondary transition-colors hover:text-content-primary"
         >
           ← 返回新闻动态
         </Link>
 
         <header className="mt-8 max-w-3xl">
           {publishedAt && (
-            <p className="text-sm text-ink-subtle">
+            <p className="text-sm text-content-muted">
               <time dateTime={post.data.published_at ?? undefined}>
                 {publishedAt}
               </time>
             </p>
           )}
-          <h1 className="mt-3 text-display-sm font-semibold text-ink">
+          <h1 className="mt-3 text-title-1 font-semibold text-content-primary">
             {asText(post.data.title)}
           </h1>
           {post.data.excerpt && (
-            <p className="mt-5 text-lg leading-relaxed text-ink-muted">
+            <p className="mt-5 text-lg leading-relaxed text-content-secondary">
               {post.data.excerpt}
             </p>
           )}
         </header>
 
         {isFilled.image(post.data.cover) && (
-          <div className="mt-10 overflow-hidden rounded-card bg-surface-strong">
+          <div className="mt-10 overflow-hidden rounded-card bg-sand-wash">
             <PrismicImage
               field={post.data.cover}
               sizes="(min-width: 1152px) 1152px, 100vw"

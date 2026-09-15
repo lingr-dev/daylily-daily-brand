@@ -1,71 +1,35 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@import "./tokens.generated.css";
+
+/* Tailwind v4 默认从项目根自动探测 content，而 uiux/ 与 req-specs/ 是 checkout
+   在仓库里的 submodule —— 它们不在 .gitignore 里，于是原型页的类名会被一并
+   收进产物（实测多出 text-6xl / min-h-screen / animate-pulse / blur-3xl 等
+   本站根本不用的规则）。关掉自动探测，显式只扫 src/。
+
+   代价：放到 src/ 之外的 markup 不会被扫描。本站所有组件都在 src/ 下，
+   真要新增目录，在这里补一条 @source 即可。 */
+@source "../";
 
 /* ==========================================================================
-   设计系统 tokens
-   改品牌色、字体、圆角只需改这里；组件层只用语义 token，不写字面值。
+   设计系统
+
+   颜色、圆角、字号、字体、阴影、缓动全部来自 uiux 的设计令牌，由
+   scripts/sync-tokens.mts 生成到 ./tokens.generated.css。
+
+   ⚠️ 不要在这里改色，也不要在这里另建一套语义名 —— 本仓库此前就自建过一套
+   text-ink / bg-canvas / border-line，与 uiux 一一对应却互不相识。那正是
+   uiux 的 themes/README.md 三轮整理反复在消灭的「平行词汇」。
+   改色请改上游，然后 `pnpm tokens:sync`；`pnpm tokens:check` 会拦住漂移。
    ========================================================================== */
 
 @theme {
-  /* --- 字体 -------------------------------------------------------------
-     不加载中文 webfont：一套完整中文字体动辄 3-8MB，国内首屏无法接受。
-     走系统字体栈，零网络请求。若品牌需要专属字型，用 next/font/local
-     加载「子集化」后的字体文件（只保留站内实际用到的字），挂到
-     --font-display 上，仅用于大标题，正文仍走系统栈。
-     ------------------------------------------------------------------- */
-  --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC",
-    "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei",
-    "Noto Sans SC", "Source Han Sans SC", sans-serif;
-  --font-display: var(--font-sans);
-  --font-serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", serif;
-
-  /* --- 品牌色 -----------------------------------------------------------
-     换主色只改这一组。用 oklch 保证各档明度感知均匀。
-     ------------------------------------------------------------------- */
-  --color-brand-50: oklch(0.972 0.015 258);
-  --color-brand-100: oklch(0.936 0.032 258);
-  --color-brand-200: oklch(0.876 0.062 258);
-  --color-brand-300: oklch(0.788 0.104 260);
-  --color-brand-400: oklch(0.687 0.152 262);
-  --color-brand-500: oklch(0.588 0.186 262);
-  --color-brand-600: oklch(0.502 0.198 263);
-  --color-brand-700: oklch(0.424 0.170 263);
-  --color-brand-800: oklch(0.352 0.132 263);
-  --color-brand-900: oklch(0.284 0.092 263);
-  --color-brand-950: oklch(0.202 0.060 263);
-
-  /* --- 语义色 ----------------------------------------------------------- */
-  --color-ink: oklch(0.219 0.011 262);
-  --color-ink-muted: oklch(0.505 0.013 262);
-  --color-ink-subtle: oklch(0.646 0.011 262);
-  --color-canvas: oklch(1 0 0);
-  --color-surface: oklch(0.984 0.002 262);
-  --color-surface-strong: oklch(0.962 0.004 262);
-  --color-line: oklch(0.912 0.004 262);
-  --color-line-strong: oklch(0.855 0.006 262);
-
-  /* --- 版式 -------------------------------------------------------------
-     hero / section 标题用的大字号，Tailwind 默认档位之上补两档。
-     ------------------------------------------------------------------- */
-  --text-display-sm: 2.25rem;
-  --text-display-sm--line-height: 1.15;
-  --text-display-sm--letter-spacing: -0.02em;
-  --text-display: 3rem;
-  --text-display--line-height: 1.1;
-  --text-display--letter-spacing: -0.025em;
-  --text-display-lg: 4rem;
-  --text-display-lg--line-height: 1.05;
-  --text-display-lg--letter-spacing: -0.03em;
-
-  /* --- 节奏 -------------------------------------------------------------
-     品牌站的视觉节奏主要由「区块间距」决定，统一收在一个 token 上，
-     避免每个 slice 各写一套 padding。
+  /* --- 本站独有 ---------------------------------------------------------
+     小程序里没有「页面区块节奏」与「内容最大宽度」这两个概念，
+     uiux 的令牌里也就没有对应物，所以留在这里自己维护。
      ------------------------------------------------------------------- */
   --spacing-section: 5rem;
   --spacing-section-lg: 7.5rem;
   --container-content: 72rem;
-
-  --radius-card: 0.875rem;
 }
 
 /* ==========================================================================
@@ -80,8 +44,8 @@
   }
 
   body {
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
+    background-color: var(--color-surface-base);
+    color: var(--color-content-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -97,13 +61,15 @@
     text-wrap: pretty;
   }
 
+  /* 桃色底配墨字 7.15:1。反过来（白字落桃上）只有 2.02:1 —— 见迁移方案 §3.2 */
   ::selection {
-    background-color: var(--color-brand-200);
-    color: var(--color-brand-950);
+    background-color: var(--color-marketing-peach);
+    color: var(--color-content-primary);
   }
 
+  /* 焦点圈用 brand-deep：纸面 6.83:1，是橙色系里唯一够格承载细线与文字的档 */
   :focus-visible {
-    outline: 2px solid var(--color-brand-600);
+    outline: 2px solid var(--color-brand-deep);
     outline-offset: 2px;
   }
 

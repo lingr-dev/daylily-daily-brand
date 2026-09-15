@@ -27,7 +27,7 @@ export default function ImageText({ slice }: ImageTextProps) {
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           {isFilled.image(image) && (
             <div
-              className={`overflow-hidden rounded-card bg-surface-strong ${
+              className={`overflow-hidden rounded-card bg-sand-wash ${
                 imageFirst ? "lg:order-first" : "lg:order-last"
               }`}
             >

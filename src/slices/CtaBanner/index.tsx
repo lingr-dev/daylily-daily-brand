@@ -16,14 +16,14 @@ export default function CtaBanner({ slice }: CtaBannerProps) {
       className="py-section"
     >
       <Container>
-        <div className="rounded-card bg-brand-950 px-6 py-14 text-center md:px-12">
+        <div className="rounded-card bg-content-primary px-6 py-14 text-center md:px-12">
           {isFilled.richText(heading) && (
             <div className="mx-auto max-w-2xl">
               <RichText
                 field={heading}
                 components={{
                   heading2: ({ children }) => (
-                    <h2 className="text-3xl font-semibold text-white md:text-4xl">
+                    <h2 className="text-3xl font-semibold text-content-inverse md:text-4xl">
                       {children}
                     </h2>
                   ),
@@ -33,7 +33,7 @@ export default function CtaBanner({ slice }: CtaBannerProps) {
           )}
 
           {isFilled.richText(body) && (
-            <div className="mx-auto mt-5 max-w-xl [&_p]:text-brand-200">
+            <div className="mx-auto mt-5 max-w-xl [&_p]:text-sand">
               <RichText field={body} />
             </div>
           )}
@@ -44,14 +44,14 @@ export default function CtaBanner({ slice }: CtaBannerProps) {
                 <Button
                   field={primary_link}
                   variant="primary"
-                  className="bg-white text-brand-950 hover:bg-brand-100"
+                  className="bg-surface-container text-content-primary hover:bg-sand-wash"
                 />
               )}
               {isFilled.link(secondary_link) && (
                 <Button
                   field={secondary_link}
                   variant="secondary"
-                  className="border-brand-700 text-brand-100 hover:border-brand-200 hover:bg-brand-900"
+                  className="border-content-secondary text-sand hover:border-sand hover:bg-content-body"
                 />
               )}
             </div>

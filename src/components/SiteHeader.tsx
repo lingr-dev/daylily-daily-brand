@@ -23,12 +23,12 @@ export function SiteHeader({
   const siteName = settings.data.site_name || site.name;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-hair bg-surface-base/85 backdrop-blur-md">
       <Container>
         <div className="flex h-16 items-center justify-between gap-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-lg font-semibold tracking-tight text-ink transition-colors hover:text-brand-600"
+            className="flex items-center gap-2 text-lg font-semibold tracking-tight text-content-primary transition-colors hover:text-brand-deep"
           >
             {isFilled.image(settings.data.logo) ? (
               <PrismicImage
@@ -50,7 +50,7 @@ export function SiteHeader({
                     <li key={asLink(item) ?? index}>
                       <PrismicNextLink
                         field={item}
-                        className="text-sm text-ink-muted transition-colors hover:text-ink"
+                        className="text-sm text-content-secondary transition-colors hover:text-content-primary"
                       />
                     </li>
                   ))}
@@ -59,7 +59,7 @@ export function SiteHeader({
 
               <details className="relative md:hidden">
                 <summary
-                  className="flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-muted transition-colors hover:text-ink [&::-webkit-details-marker]:hidden"
+                  className="flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-content-secondary transition-colors hover:text-content-primary [&::-webkit-details-marker]:hidden"
                   aria-label="打开菜单"
                 >
                   <span className="grid gap-1" aria-hidden="true">
@@ -71,14 +71,14 @@ export function SiteHeader({
                 </summary>
                 <nav
                   aria-label="主导航"
-                  className="absolute right-0 top-full mt-2 min-w-44 rounded-card border border-line bg-canvas p-2 shadow-lg"
+                  className="absolute right-0 top-full mt-2 min-w-44 rounded-card border border-hair bg-surface-base p-2 shadow-lg"
                 >
                   <ul className="grid">
                     {nav.map((item, index) => (
                       <li key={asLink(item) ?? index}>
                         <PrismicNextLink
                           field={item}
-                          className="block rounded-md px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-surface hover:text-ink"
+                          className="block rounded-md px-3 py-2 text-sm text-content-secondary transition-colors hover:bg-surface-container hover:text-content-primary"
                         />
                       </li>
                     ))}

@@ -14,33 +14,33 @@ import { PrismicImage } from "@/components/PrismicImage";
  */
 const serializer: JSXMapSerializer = {
   heading2: ({ children }) => (
-    <h2 className="mt-12 text-2xl font-semibold text-ink first:mt-0 md:text-3xl">
+    <h2 className="mt-12 text-2xl font-semibold text-content-primary first:mt-0 md:text-3xl">
       {children}
     </h2>
   ),
   heading3: ({ children }) => (
-    <h3 className="mt-10 text-xl font-semibold text-ink first:mt-0">
+    <h3 className="mt-10 text-xl font-semibold text-content-primary first:mt-0">
       {children}
     </h3>
   ),
   heading4: ({ children }) => (
-    <h4 className="mt-8 text-lg font-semibold text-ink first:mt-0">
+    <h4 className="mt-8 text-lg font-semibold text-content-primary first:mt-0">
       {children}
     </h4>
   ),
   paragraph: ({ children }) => (
-    <p className="mt-5 text-base leading-relaxed text-ink-muted first:mt-0">
+    <p className="mt-5 text-base leading-relaxed text-content-secondary first:mt-0">
       {children}
     </p>
   ),
   strong: ({ children }) => (
-    <strong className="font-semibold text-ink">{children}</strong>
+    <strong className="font-semibold text-content-primary">{children}</strong>
   ),
   em: ({ children }) => <em className="italic">{children}</em>,
   hyperlink: ({ node, children }) => (
     <PrismicNextLink
       field={node.data}
-      className="text-brand-600 underline decoration-brand-200 underline-offset-2 transition-colors hover:decoration-brand-600"
+      className="text-brand-deep underline decoration-marketing-peach underline-offset-2 transition-colors hover:decoration-brand-deep"
     >
       {children}
     </PrismicNextLink>
@@ -52,21 +52,21 @@ const serializer: JSXMapSerializer = {
     <ol className="mt-5 grid list-decimal gap-2 pl-5 first:mt-0">{children}</ol>
   ),
   listItem: ({ children }) => (
-    <li className="list-disc text-base leading-relaxed text-ink-muted">
+    <li className="list-disc text-base leading-relaxed text-content-secondary">
       {children}
     </li>
   ),
   oListItem: ({ children }) => (
-    <li className="text-base leading-relaxed text-ink-muted">{children}</li>
+    <li className="text-base leading-relaxed text-content-secondary">{children}</li>
   ),
   preformatted: ({ children }) => (
-    <pre className="mt-6 overflow-x-auto rounded-card bg-surface-strong p-4 text-sm first:mt-0">
+    <pre className="mt-6 overflow-x-auto rounded-card bg-sand-wash p-4 text-sm first:mt-0">
       <code>{children}</code>
     </pre>
   ),
   image: ({ node }) => (
     <figure className="mt-8 first:mt-0">
-      <div className="overflow-hidden rounded-card bg-surface-strong">
+      <div className="overflow-hidden rounded-card bg-sand-wash">
         <PrismicImage
           field={node}
           sizes="(min-width: 768px) 42rem, 90vw"
@@ -74,7 +74,7 @@ const serializer: JSXMapSerializer = {
         />
       </div>
       {node.alt && (
-        <figcaption className="mt-3 text-sm text-ink-subtle">
+        <figcaption className="mt-3 text-sm text-content-muted">
           {node.alt}
         </figcaption>
       )}

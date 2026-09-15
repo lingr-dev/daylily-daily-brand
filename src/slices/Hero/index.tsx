@@ -30,7 +30,7 @@ export default function Hero({ slice }: HeroProps) {
   const text = (
     <div>
       {eyebrow && (
-        <p className="text-sm font-medium text-brand-600">{eyebrow}</p>
+        <p className="text-sm font-medium text-brand-deep">{eyebrow}</p>
       )}
 
       {isFilled.richText(heading) && (
@@ -39,7 +39,7 @@ export default function Hero({ slice }: HeroProps) {
             field={heading}
             components={{
               heading1: ({ children }) => (
-                <h1 className="text-display-sm font-semibold text-ink md:text-display lg:text-display-lg">
+                <h1 className="text-display font-semibold text-content-primary">
                   {children}
                 </h1>
               ),
@@ -71,7 +71,7 @@ export default function Hero({ slice }: HeroProps) {
         isFilled.image(slice.primary.image) ? (
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             {text}
-            <div className="overflow-hidden rounded-card bg-surface-strong">
+            <div className="overflow-hidden rounded-card bg-sand-wash">
               <PrismicImage
                 field={slice.primary.image}
                 sizes="(min-width: 1024px) 34rem, 90vw"

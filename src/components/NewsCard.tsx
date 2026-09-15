@@ -21,7 +21,7 @@ export function NewsCard({
   return (
     <Link href={href} className="group block">
       {isFilled.image(cover) && (
-        <div className="overflow-hidden rounded-card bg-surface-strong">
+        <div className="overflow-hidden rounded-card bg-sand-wash">
           <PrismicImage
             field={cover}
             sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 90vw"
@@ -32,15 +32,15 @@ export function NewsCard({
 
       <div className={isFilled.image(cover) ? "mt-5" : undefined}>
         {date && (
-          <p className="text-xs text-ink-subtle">
+          <p className="text-xs text-content-muted">
             <time dateTime={publishedAt ?? undefined}>{date}</time>
           </p>
         )}
-        <h3 className="mt-2 text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-brand-600">
+        <h3 className="mt-2 text-lg font-semibold leading-snug text-content-primary transition-colors group-hover:text-brand-deep">
           {title}
         </h3>
         {excerpt && (
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-muted">
+          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-content-secondary">
             {excerpt}
           </p>
         )}

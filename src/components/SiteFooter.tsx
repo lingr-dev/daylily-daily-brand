@@ -33,18 +33,18 @@ export function SiteFooter({
   );
 
   return (
-    <footer className="mt-auto border-t border-line bg-surface">
+    <footer className="mt-auto border-t border-hair bg-surface-container">
       <Container className="py-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <p className="text-base font-semibold text-ink">{siteName}</p>
+            <p className="text-base font-semibold text-content-primary">{siteName}</p>
             {tagline && (
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+              <p className="mt-2 text-sm leading-relaxed text-content-secondary">
                 {tagline}
               </p>
             )}
             {isFilled.richText(settings.data.footer_note) && (
-              <div className="mt-4 text-sm leading-relaxed text-ink-muted [&_a]:underline [&_a]:decoration-line-strong [&_a]:underline-offset-2">
+              <div className="mt-4 text-sm leading-relaxed text-content-secondary [&_a]:underline [&_a]:decoration-sand [&_a]:underline-offset-2">
                 <PrismicRichText field={settings.data.footer_note} />
               </div>
             )}
@@ -58,7 +58,7 @@ export function SiteFooter({
                     <li key={asLink(item) ?? index}>
                       <PrismicNextLink
                         field={item}
-                        className="text-sm text-ink-muted transition-colors hover:text-ink"
+                        className="text-sm text-content-secondary transition-colors hover:text-content-primary"
                       />
                     </li>
                   ))}
@@ -76,7 +76,7 @@ export function SiteFooter({
               <li key={index}>
                 <PrismicNextLink
                   field={item.link}
-                  className="text-sm text-ink-muted transition-colors hover:text-ink"
+                  className="text-sm text-content-secondary transition-colors hover:text-content-primary"
                 >
                   {item.platform ? socialLabels[item.platform] : null}
                 </PrismicNextLink>
@@ -85,7 +85,7 @@ export function SiteFooter({
           </ul>
         )}
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-2 border-t border-hair pt-6 text-xs text-content-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {buildYear} {siteName}
           </p>
@@ -98,7 +98,7 @@ export function SiteFooter({
               href="https://beian.miit.gov.cn/"
               target="_blank"
               rel="noreferrer noopener"
-              className="transition-colors hover:text-ink-muted"
+              className="transition-colors hover:text-content-secondary"
             >
               {settings.data.icp_license}
             </a>
@@ -115,11 +115,11 @@ function ContactBlock({ settings }: { settings: Content.SettingsDocument }) {
   if (!contact_email && !contact_phone && !contact_address) return null;
 
   return (
-    <div className="grid gap-2 text-sm text-ink-muted">
+    <div className="grid gap-2 text-sm text-content-secondary">
       {contact_email && (
         <a
           href={`mailto:${contact_email}`}
-          className="transition-colors hover:text-ink"
+          className="transition-colors hover:text-content-primary"
         >
           {contact_email}
         </a>
@@ -127,7 +127,7 @@ function ContactBlock({ settings }: { settings: Content.SettingsDocument }) {
       {contact_phone && (
         <a
           href={`tel:${contact_phone}`}
-          className="transition-colors hover:text-ink"
+          className="transition-colors hover:text-content-primary"
         >
           {contact_phone}
         </a>

@@ -33,9 +33,9 @@ export default function Testimonial({ slice }: TestimonialProps) {
           {filled.map((item, index) => (
             <li
               key={index}
-              className="flex flex-col rounded-card border border-line bg-surface p-6"
+              className="flex flex-col rounded-card border border-hair bg-surface-container p-6"
             >
-              <blockquote className="flex-1 [&_p]:text-base [&_p]:text-ink">
+              <blockquote className="flex-1 [&_p]:text-base [&_p]:text-content-primary">
                 <RichText field={item.quote} />
               </blockquote>
 
@@ -49,12 +49,12 @@ export default function Testimonial({ slice }: TestimonialProps) {
                 )}
                 <div>
                   {item.author_name && (
-                    <p className="text-sm font-medium text-ink">
+                    <p className="text-sm font-medium text-content-primary">
                       {item.author_name}
                     </p>
                   )}
                   {item.author_title && (
-                    <p className="text-xs text-ink-subtle">
+                    <p className="text-xs text-content-muted">
                       {item.author_title}
                     </p>
                   )}

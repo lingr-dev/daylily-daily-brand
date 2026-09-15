@@ -72,11 +72,37 @@ npx prismic docs list       # 官方文档可离线查
 
 ## 样式
 
-- 只用语义 token：`text-ink` / `text-ink-muted` / `bg-canvas` / `bg-surface` /
-  `border-line` / `text-brand-600` / `py-section` / `max-w-content` / `rounded-card`。
-  不要写字面色值。token 定义在 `src/app/globals.css` 的 `@theme` 里。
+- **设计令牌的真相在 `uiux/`，不在本仓库。**
+  `src/app/tokens.generated.css` 由 `scripts/sync-tokens.mts` 从
+  `uiux/prototypes/daylily-daily/themes/tokens.css` 生成，**不要手改**。
+  改色改上游，然后 `pnpm tokens:sync`；`pnpm tokens:check` 在 CI 里拦漂移。
+
+  只用语义 token，不写字面色值：
+
+  | 类别 | token |
+  | --- | --- |
+  | 纸面 | `bg-surface-base`（宣纸白，全局画布）/ `bg-surface-container`（纯白卡片）/ `bg-sand-wash` |
+  | 墨色 | `text-content-primary` / `text-content-body` / `text-content-secondary` / `text-content-muted`（仅大字装饰）/ `text-content-inverse` |
+  | 描边 | `border-hair` / `border-sand` / `border-hairline` |
+  | 品牌 | `bg-marketing-peach`（仅填充与装饰）/ `text-brand-deep`（橙色系文字唯一合规值）/ `marketing-jade` |
+  | 版式 | `text-display` / `text-title-1`…`text-caption` |
+  | 本站独有 | `py-section` / `py-section-lg` / `max-w-content` / `rounded-card` |
+
+  命名沿用 `uiux/` 的通道名，好让两个仓库的 markup 读起来是同一套词汇。
+  **不要再自建平行词汇** —— 本仓库此前就自建过一套 `text-ink` / `bg-canvas` /
+  `border-line`，与上游一一对应却互不相识；那正是 `uiux/` 的
+  `themes/README.md` 三轮整理反复在消灭的东西。
+
+- **`marketing-peach` 与 `marketing-jade` 不可作文字色。**
+  宣纸白上分别只有 1.89:1 和 2.64:1，白字落在 peach 填充上更只有 2.02:1。
+  橙色系文字一律 `text-brand-deep`（6.83:1）；主 CTA 用 peach 填充配墨字（7.15:1）。
+  详见 `docs/landing-migration.md` §3.2。
+
 - **不要拼动态 class 名**（`lg:grid-cols-${n}`）。Tailwind 靠扫描源码收集 class，
   拼出来的不会被生成。用完整 class 字符串查表。
+  注意 Tailwind **只扫 `src/`**（`globals.css` 里 `source(none)` + `@source "../"`）——
+  submodule 不在 `.gitignore` 里，不关掉自动探测的话原型页的类名会被一并收进产物
+  （实测 CSS 从 5.3KB 涨到 15.3KB gzip）。在 `src/` 之外新增 markup 目录时要补 `@source`。
 - 站点承诺单一亮色外观，不做 dark mode。
 - 不加载中文 webfont（体积以 MB 计）。需要品牌字型时用 `next/font/local` 加载
   **子集化**后的字体，且只用于大标题。
