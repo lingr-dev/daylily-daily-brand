@@ -389,6 +389,69 @@ npx prismic docs list              # 官方文档可离线查
 
 ---
 
+## 4B. push 之后的三件事（2026-09-16）
+
+**一、push 前先核对了远端有没有人在 Prismic 后台改过模型。**
+
+`prismic status` 没有 diff 选项，所以在干净的工作区上 `prismic pull` → `git diff`
+→ `git checkout -- .` 还原。结论：远端**没有任何不在 git 里的东西** ——
+所有差异都恰好是本地新增（pull 后表现为纯删除），加上本次改的 3 个 label。
+push 安全，未覆盖任何东西。推送结果：3 个 type、5 个 slice。
+
+这套「pull → diff → 还原」值得固化成习惯：`push` 的语义是「本地是真相，
+远端向本地看齐」，在多人多机的仓库上盲推会静默丢掉别人在后台的改动。
+
+**二、仓库主语言从 `en-us` 改成了 `zh-cn`。**
+
+`daylily` 建库时没带 `--lang zh-cn`，主语言一直是 `en-us`；而这是中文单语站，
+`src/lib/site.ts` 写着 `prismicLocale: "zh-cn"`，`src/prismicio.ts` 自己的报错
+文案里也写着 `npx prismic repo create <仓库名> --lang zh-cn`。
+
+`prismicLocale` 当时**声明了但没有任何查询在用**，所以什么都没坏 —— 但内容会以
+`en-us` 录进去。零文档时改主语言是零迁移成本，录完内容再改就要动已有文档，
+所以在这个时点改掉：
+
+```sh
+npx prismic locale add zh-cn --master   # ✅ 成功
+npx prismic locale remove en-us         # ✗ 稳定 400，CLI 让去提 issue
+```
+
+`en-us` 目前删不掉（`api.internal.prismic.io/locale/repository/locales/en-us`
+返回 400）。`zh-cn` 已是 master，`en-us` 只是编辑后台多一个空语言，无害；
+要清掉就在 Prismic 后台 Settings → Translations & locales 里删。
+
+**三、`pnpm build:next` 仍然失败，原因与此前两次判断都不同。**
+
+先后错过两次，记下来免得再绕：
+
+| 判断 | 是否成立 |
+| --- | --- |
+| 「自定义类型没 push 到 Prismic」 | ✗ 类型本来就在远端，`status` 显示的是 Differ 不是 Local-only |
+| 「push 之后就好了」 | ✗ push 成功后报错一字不变 |
+| 「CDN 缓存了旧的 API 根」 | ✗ CDN 与源站返回一致，`cache-control: no-store` |
+
+实测到的事实：
+
+- 5 个自定义类型都在（`prismic type list` 与 API 根的 `types` 映射都有）
+- 仓库里**零文档**（`total_results_size: 0`）
+- 只有一个 ref，`push` 与改 locale 都**没有产生新 ref**
+- 不带 `routes` 的查询 HTTP 200 正常返回
+- 带 `routes` 时，`homepage`（确实存在）与 `zzz_not_real`（完全不存在）
+  报的错**一模一样**，`Expected one of:` 都是空
+
+最能解释这组事实的假设：**route resolver 校验的是「该 ref 上存在的类型」，
+而零文档的 ref 上没有任何类型。** 官方文档（`prismic docs view routes`
+与 `content-api`）没有记载这条校验规则，所以这只是假设，未经证实。
+
+可证伪的做法：在 Prismic 后台发布任意一篇文档，再跑一次 `pnpm build:next`。
+**这件事在第 7 步录入内容时自然会发生**，不必为它单独绕路。
+
+在此之前 `CLAUDE.md`「`pnpm build:next` 不需要 Prismic 连接也能验证类型与静态
+导出约束」这句话仍然不成立，暂不修改 —— 等有内容后一次性复核。
+注意 CSS 在失败之前已经产出，所以 `pnpm classes:check` 不受影响。
+
+---
+
 ## 5. 代码改动清单
 
 | 文件 | 改动 |
@@ -522,10 +585,9 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
 3. ✅ **Icon 组件**（2026-09-15）：`src/components/Icon.tsx`，9 个内联 SVG，
    路径数据从 Remix Icon 4.2.0 原样取出并逐字节比对。导出的 `iconNames`
    就是第 4 步建模时 `icon` 字段的 Select 选项值。
-4. 🔶 **内容模型**（§4）：CLI 建模与 `gen types` 已完成（2026-09-15），
-   **`npx prismic push` 尚未执行** —— `prismic login` 是交互式的，需要 Human 跑一次。
-   push 之前 Prismic 仓库里一个自定义类型都没有，`pnpm build:next` 会一直报
-   `[Link resolver error] Unknown type`。
+4. ✅ **内容模型**（§4）：CLI 建模 → `gen types` → `push` 全部完成（2026-09-16）。
+   `npx prismic status` 显示 `Already up to date`。仓库主语言已改为 `zh-cn`。
+   详见 §4B。
 5. **slice 组件**：FeatureGrid 两变体 → MediaCards → Callout → CtaBanner light → Hero。
 6. **壳层**：SiteHeader CTA、SiteFooter 备案、layout 统计与 JSON-LD。
 7. **内容录入**：`homepage` 单例约 20 段文案。手工可行但易错；若之后还要重建或换环境，
