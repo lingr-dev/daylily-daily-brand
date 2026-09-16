@@ -154,6 +154,33 @@ pnpm tokens:sync                       # 重新生成 src/app/tokens.generated.c
 → `media_cards` → `image_text` → `feature_grid/quote` → `cta_banner/light`。
 首页就是这么拼的，可以直接去 Prismic 后台照着看。
 
+### 本地看真实页面
+
+两种方式，**都不需要部署，也不会影响线上**：
+
+```sh
+pnpm dev        # :3000 —— 开发服务器，改代码热更新
+pnpm build:next && pnpm preview   # :4000 —— 预览真实静态产物
+```
+
+区别要弄清楚：
+
+| | `pnpm dev` | `pnpm preview` |
+| --- | --- | --- |
+| 端口 | 3000 | 4000（两者可同时开） |
+| 内容 | **每次请求实时取 Prismic** | 构建那一刻烘死的 |
+| 改代码 | 热更新 | 要重新 `build:next` |
+| 改内容 | 刷新页面就能看到（发布后等 CDN） | 要重新 `build:next` |
+| 逼真度 | 有 dev 运行时，非最终产物 | **就是要部署上去的那份** |
+
+**改内容、调版面时用 `dev`**——在 Prismic 点发布，等 CDN 传播（几十秒到几分钟），
+刷新页面就看到了，完全不用构建。
+
+**上线前用 `preview`**——它服务的是 `out/` 目录，和部署到服务器的字节完全一致。
+静态导出的约束（动态路由、trailingSlash、404 页）只有在这里才会暴露出来。
+
+两者都只读 Prismic，**不会写任何东西**，也不会碰线上站点。
+
 ### 改完必须跑的验证
 
 ```sh

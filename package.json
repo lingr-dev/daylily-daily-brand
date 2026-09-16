@@ -11,7 +11,7 @@
     "classes:check": "node scripts/check-classes.mts",
     "build": "pnpm run images && next build",
     "build:next": "next build",
-    "preview": "npx --yes serve@latest out",
+    "preview": "npx --yes serve@latest out -l 4000",
     "typecheck": "tsc --noEmit",
     "lint": "eslint"
   },
