@@ -1,7 +1,9 @@
 /* 由 scripts/sync-tokens.mts 生成，请勿手改。
  *
  * 真相来源：uiux/prototypes/daylily-daily/themes/tokens.css
- * 上游版本：baseline-pre-v0.5.0-82-gb1ca663
+ * 具体是哪个上游 commit，看父仓库的 submodule 指针 —— 那才是权威记录。
+ * 这里**不**抄一份：抄了的话每次 bump submodule 都会让 tokens:check 报漂移，
+ * 哪怕一个令牌都没动。会误报的检查没人会看。
  *
  * 改颜色请改上游，然后跑 `pnpm tokens:sync`。
  * `pnpm tokens:check` 会在 CI 里把漂移变成构建失败。

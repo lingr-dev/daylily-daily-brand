@@ -17,10 +17,8 @@
  * 间距不取：--sp-* 是 4/8/16/24/32/48，与 Tailwind 默认的 1/2/4/6/8/12 逐档相等，没有可同步的东西。
  */
 import { readFile, writeFile } from "node:fs/promises";
-import { execFile } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = join(
@@ -261,23 +259,12 @@ const RAW: string[] = [
    生成
    ──────────────────────────────────────────────────────────────────────── */
 
-const exec = promisify(execFile);
-
-async function upstreamRef(): Promise<string> {
-  try {
-    const { stdout } = await exec("git", ["-C", join(ROOT, "uiux"), "describe", "--always", "--dirty"]);
-    return stdout.trim();
-  } catch {
-    return "未知";
-  }
-}
-
 function emit(decl: Decl, name: string, indent = "  "): string {
   const line = `${indent}--${name}: ${decl.value};`;
   return decl.comment ? `${line.padEnd(66)} /* ${decl.comment} */` : line;
 }
 
-function build(decls: Decl[], ref: string): string {
+function build(decls: Decl[]): string {
   const byName = new Map(decls.map((d) => [d.name, d]));
   const missing: string[] = [];
 
@@ -295,7 +282,9 @@ function build(decls: Decl[], ref: string): string {
     "/* 由 scripts/sync-tokens.mts 生成，请勿手改。",
     " *",
     " * 真相来源：uiux/prototypes/daylily-daily/themes/tokens.css",
-    ` * 上游版本：${ref}`,
+    " * 具体是哪个上游 commit，看父仓库的 submodule 指针 —— 那才是权威记录。",
+    " * 这里**不**抄一份：抄了的话每次 bump submodule 都会让 tokens:check 报漂移，",
+    " * 哪怕一个令牌都没动。会误报的检查没人会看。",
     " *",
     " * 改颜色请改上游，然后跑 `pnpm tokens:sync`。",
     " * `pnpm tokens:check` 会在 CI 里把漂移变成构建失败。",
@@ -395,7 +384,7 @@ async function main() {
     throw new Error(hint);
   }
 
-  const generated = build(parseRootDecls(css), await upstreamRef());
+  const generated = build(parseRootDecls(css));
 
   if (!check) {
     await writeFile(OUTPUT, generated, "utf8");
