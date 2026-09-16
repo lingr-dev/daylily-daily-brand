@@ -25,4 +25,14 @@ export const site = {
 
   /** Prismic 侧的主 locale ID，所有查询统一引用此常量 */
   prismicLocale: "zh-cn",
+
+  /**
+   * 导航栏「打开小程序」按钮的落点。
+   *
+   * 二维码不做弹窗（见 docs/landing-migration.md §0 决策 2），按钮改成滚到
+   * 首页底部的 CTA 区块。这个值必须与那个 cta_banner 的 anchor_id 对上 ——
+   * 编辑改了 anchor_id 而这里没改，按钮就滚不到地方（不会报错，只是没反应）。
+   * 字段的 placeholder 里写了提示，但这层耦合本身消不掉。
+   */
+  ctaAnchor: "/#cta",
 } as const;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PrismicNextLink } from "@prismicio/next";
 import { asLink, isFilled, type Content } from "@prismicio/client";
+import { buttonClass } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { PrismicImage } from "@/components/PrismicImage";
 import { filledLinks } from "@/lib/settings";
@@ -21,6 +22,7 @@ export function SiteHeader({
 }) {
   const nav = filledLinks(settings.data.primary_nav);
   const siteName = settings.data.site_name || site.name;
+  const ctaLabel = settings.data.miniprogram_cta_label;
 
   return (
     <header className="sticky top-0 z-50 border-b border-hair bg-surface-base/85 backdrop-blur-md">
@@ -42,21 +44,33 @@ export function SiteHeader({
             )}
           </Link>
 
-          {nav.length > 0 && (
-            <>
+          <div className="flex items-center gap-4 md:gap-8">
+            {nav.length > 0 && (
               <nav aria-label="主导航" className="hidden md:block">
                 <ul className="flex items-center gap-8">
                   {nav.map((item, index) => (
                     <li key={asLink(item) ?? index}>
                       <PrismicNextLink
                         field={item}
-                        className="text-sm text-content-secondary transition-colors hover:text-content-primary"
+                        className="text-body-sm text-content-secondary transition-colors hover:text-content-primary"
                       />
                     </li>
                   ))}
                 </ul>
               </nav>
+            )}
 
+            {/*
+              「打开小程序」。二维码不做弹窗（迁移方案 §0 决策 2），
+              这个按钮滚到首页底部的 CTA 区块，落点由 site.ctaAnchor 定。
+            */}
+            {ctaLabel && (
+              <Link href={site.ctaAnchor} className={buttonClass("primary")}>
+                {ctaLabel}
+              </Link>
+            )}
+
+            {nav.length > 0 && (
               <details className="relative md:hidden">
                 <summary
                   className="flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-content-secondary transition-colors hover:text-content-primary [&::-webkit-details-marker]:hidden"
@@ -85,8 +99,8 @@ export function SiteHeader({
                   </ul>
                 </nav>
               </details>
-            </>
-          )}
+            )}
+          </div>
         </div>
       </Container>
     </header>

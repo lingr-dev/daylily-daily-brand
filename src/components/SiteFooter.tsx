@@ -11,6 +11,9 @@ import { site } from "@/lib/site";
  */
 const buildYear = new Date().getFullYear();
 
+/** 工信部备案查询页。ICP 与小程序备案都查这里。 */
+const MIIT_URL = "https://beian.miit.gov.cn/";
+
 const socialLabels: Record<string, string> = {
   wechat: "微信",
   weibo: "微博",
@@ -89,23 +92,61 @@ export function SiteFooter({
           <p>
             © {buildYear} {siteName}
           </p>
-          {/*
-            ICP 备案号：国内 CDN 服务的域名必须在页面展示并链到工信部查询页。
-            放在 Prismic 里而不是环境变量里，备案号变更时不需要动代码。
-          */}
-          {settings.data.icp_license && (
-            <a
-              href="https://beian.miit.gov.cn/"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="transition-colors hover:text-content-secondary"
-            >
-              {settings.data.icp_license}
-            </a>
-          )}
+          <Filings settings={settings} />
         </div>
       </Container>
     </footer>
+  );
+}
+
+/**
+ * 备案信息。
+ *
+ * 国内主体三件套：ICP 备案（网站）、小程序备案、公安联网备案。
+ * 前两个链工信部查询页，公安备案链各地公安网备系统 —— 查询链接每个备案号不同，
+ * 所以存成 Link 字段由编辑填，代码里不拼。
+ *
+ * 全部放在 Prismic 而不是环境变量里：备案号变更时不需要动代码、不需要重设 CI。
+ */
+function Filings({ settings }: { settings: Content.SettingsDocument }) {
+  const { icp_license, miniprogram_icp_license, police_license, police_license_link } =
+    settings.data;
+
+  if (!icp_license && !miniprogram_icp_license && !police_license) return null;
+
+  const linkClass = "transition-colors hover:text-content-secondary";
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+      {icp_license && (
+        <a
+          href={MIIT_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={linkClass}
+        >
+          {icp_license}
+        </a>
+      )}
+      {miniprogram_icp_license && (
+        <a
+          href={MIIT_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={linkClass}
+        >
+          小程序备案：{miniprogram_icp_license}
+        </a>
+      )}
+      {police_license &&
+        (isFilled.link(police_license_link) ? (
+          <PrismicNextLink field={police_license_link} className={linkClass}>
+            {police_license}
+          </PrismicNextLink>
+        ) : (
+          <span>{police_license}</span>
+        ))}
+    </div>
   );
 }
 

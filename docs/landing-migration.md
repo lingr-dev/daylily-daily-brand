@@ -620,7 +620,19 @@ checkout 下加载 `product.js` 失败 —— UMD 包装在 ESM 下 `this === un
    `npx prismic status` 显示 `Already up to date`。仓库主语言已改为 `zh-cn`。
    详见 §4B。
 5. **slice 组件**：FeatureGrid 两变体 → MediaCards → Callout → CtaBanner light → Hero。
-6. **壳层**：SiteHeader CTA、SiteFooter 备案、layout 统计与 JSON-LD。
+6. ✅ **壳层**（2026-09-16）：SiteHeader 的小程序按钮、SiteFooter 的备案三件套、
+   layout 的百度统计、首页的 JSON-LD、`public/llms.txt`。
+
+   一处消不掉的耦合：导航栏按钮的落点 `site.ctaAnchor`（`/#cta`）必须与
+   `cta_banner/light` 的 `anchor_id` 对上。编辑改了 anchor_id 而代码没跟，
+   按钮就滚不到地方 —— 不报错，只是没反应。字段的 placeholder 里写了提示，
+   但这层耦合本身消不掉。
+
+   `llms.txt` 按词表 2.0.0 重写（原型那份是旧词表），并沿用原型的
+   `<!-- lexicon: …豁免·起/止 -->` 标记圈出两处刻意出现禁词的地方：
+   「人们怎么搜」一节，以及「补记不等于补服、未记录不等于漏服、结束安排不等于停药」
+   —— 后者的措辞是 `lexicon/changes/2026-09-07` §2 明确规定的，
+   「停药」一条的 hint 原文即「结束安排不等于停药」。豁免区外零命中。
 7. **内容录入**：`homepage` 单例约 20 段文案。手工可行但易错；若之后还要重建或换环境，
    用 `@prismicio/client` 的 Migration API 写一次性导入脚本更划算。
 8. **图片**：图床对接后回填（§6）。
