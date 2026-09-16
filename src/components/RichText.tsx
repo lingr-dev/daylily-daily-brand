@@ -36,7 +36,25 @@ const serializer: JSXMapSerializer = {
   strong: ({ children }) => (
     <strong className="font-semibold text-content-primary">{children}</strong>
   ),
-  em: ({ children }) => <em className="italic">{children}</em>,
+  /*
+    中文没有斜体，浏览器会合成一个倾斜字形，观感很差。保留 em 的语义，
+    但用字重而不是倾斜来表达强调。
+  */
+  em: ({ children }) => <em className="not-italic font-medium">{children}</em>,
+  /*
+    自定义 label「highlight」——落地页大标题里那个被点亮的词（「有同一个答案」）。
+    用 label 而不是挪用 em：em 是「强调」，而这里表达的是「品牌高亮」，
+    两者在别处会打架。建模时用 `prismic field edit --labels highlight` 开启。
+
+    颜色用 brand-deep 而不是 marketing-peach：后者在宣纸上只有 1.89:1，
+    做不了文字色（见 docs/landing-migration.md §3.2）。
+  */
+  label: ({ node, children }) =>
+    node.data.label === "highlight" ? (
+      <span className="text-brand-deep">{children}</span>
+    ) : (
+      <span>{children}</span>
+    ),
   hyperlink: ({ node, children }) => (
     <PrismicNextLink
       field={node.data}

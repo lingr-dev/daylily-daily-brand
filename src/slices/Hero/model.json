@@ -20,6 +20,9 @@
         "heading": {
           "config": {
             "label": "主标题",
+            "labels": [
+              "highlight"
+            ],
             "single": "heading1"
           },
           "type": "StructuredText"
@@ -71,6 +74,9 @@
         "heading": {
           "config": {
             "label": "主标题",
+            "labels": [
+              "highlight"
+            ],
             "single": "heading1"
           },
           "type": "StructuredText"
