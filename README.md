@@ -57,7 +57,114 @@ pnpm build:next   # 只跑 next build（跳过图片本地化，调试用）
 pnpm preview      # 起个静态服务器预览 out/ 产物
 pnpm typecheck
 pnpm lint
+pnpm tokens:sync    # 从 uiux 重新生成设计令牌
+pnpm tokens:check   # 令牌是否与 uiux 漂移（CI 用）
+pnpm classes:check  # 拿真实编译产物核对每个 className（需先跑 build:next）
 ```
+
+## 工作流程
+
+**先记住一件事：这是纯静态站。** 内容存在 Prismic，但页面是**构建期**烘出来的
+——在 Prismic 后台点「发布」，线上不会自己变。任何内容改动都要重新构建并部署。
+
+> ⚠️ **CI 目前没有接。** 本文档「Webhook」一节写了接法，但仓库里没有 `.github/`
+> 或任何流水线配置。在接上之前，每次内容更新都要有人手动跑 `pnpm build` 再同步
+> `out/`。这是当前最该补的一环。
+
+改动分五类，路径完全不同：
+
+| 你要做的事 | 动代码吗 | 在哪做 |
+| --- | --- | --- |
+| 改文案、换图、调导航、改备案号 | 否 | Prismic 后台 |
+| 新增一个内容页（`/pricing`、`/faq`…） | 否 | Prismic 后台 |
+| 新增一种版块（slice） | 是 | 本仓库 + CLI |
+| 新增一种页面类型 | 是 | 本仓库 + CLI，**三处同步** |
+| 改颜色 / 字号 / 圆角 | 是，但改的是 **uiux** | `uiux` 仓库 + `pnpm tokens:sync` |
+
+### A. 改内容（不动代码）
+
+1. Prismic 后台改 `Homepage` / `Page` / `Settings`，点发布
+2. 回到本仓库跑 `pnpm build`
+3. 把 `out/` 同步到服务器
+
+发布后 CDN 有几十秒到几分钟的传播延迟，**构建前先确认拿到的是新 ref**，
+否则会用旧内容烘出一份产物却以为没生效（这个坑踩过，见
+`docs/landing-migration.md` §4B）。
+
+### B. 新增一个内容页（不动代码）
+
+1. Prismic 后台 → **Page** → 新建文档
+2. 填 **UID**，比如 `pricing` —— UID 直接决定网址 `/pricing/`
+3. 用 slice 拼版面（现有 11 种，见下）
+4. 发布
+5. 要进导航：`Settings` → 主导航 / 页脚导航 加一条，链接填 `/pricing`
+6. 重新构建部署
+
+UID 取值要避开已被静态路由占用的名字：**`news`**（`/news` 是独立路由）和
+**`slice-simulator`**。撞上了产物路径会冲突。
+
+### C. 新增一种版块（slice）—— 要动代码
+
+```sh
+npx prismic slice create "Pricing Table" --id pricing_table
+npx prismic field add rich-text heading --to-slice pricing_table --allow heading2 --single --label "标题"
+# … 其余字段
+npx prismic slice connect pricing_table --to page      # 接到哪些类型
+npx prismic slice connect pricing_table --to homepage
+npx prismic gen types && npx prismic gen slice-index
+```
+
+然后写 `src/slices/PricingTable/index.tsx`（CLI 生成的是占位组件），
+最后 `git commit` + `npx prismic push`。
+
+注意：**`prismic push` 会拒绝有未提交改动的模型文件** —— 先 commit 再 push。
+这是 CLI 的安全检查，不是 bug。
+
+### D. 新增一种页面类型 —— 三处必须同步
+
+比如要一个 `/cases/:uid` 的案例页：
+
+1. `npx prismic type create "Case" --format page` + 加字段 + `slice connect`
+2. `prismic.config.json` 的 `routes` 加 `{ "type": "case", "path": "/cases/:uid" }`
+3. `src/app/cases/[uid]/page.tsx`，**必须写 `generateStaticParams()`**
+
+漏掉第 3 步构建直接失败；漏掉第 2 步链接解析不出 URL。
+
+### E. 改设计令牌
+
+颜色、字号、圆角、阴影的真相在 `uiux/prototypes/daylily-daily/themes/tokens.css`。
+**不要在本仓库改**：
+
+```sh
+# 1. 在 uiux 仓库改 tokens.css
+# 2. 回到本仓库同步 submodule
+git submodule update --remote uiux     # 只一级，禁止 --recursive
+pnpm tokens:sync                       # 重新生成 src/app/tokens.generated.css
+```
+
+`pnpm tokens:check` 会在两边不一致时失败 —— 这是防止两个仓库再次各活各的机制。
+
+### 现有的 11 种 slice
+
+`hero`(2 变体) · `rich_text` · `feature_grid`(3 变体) · `media_cards` ·
+`callout` · `image_text`(2 变体) · `stats` · `logo_wall` · `testimonial` ·
+`cta_banner`(2 变体) · `faq`
+
+拼一个落地页大致是：`hero` → `feature_grid/card` → `media_cards` → `callout`
+→ `media_cards` → `image_text` → `feature_grid/quote` → `cta_banner/light`。
+首页就是这么拼的，可以直接去 Prismic 后台照着看。
+
+### 改完必须跑的验证
+
+```sh
+pnpm tokens:check     # 令牌是否与 uiux 漂移
+pnpm typecheck && pnpm lint
+pnpm build:next       # 需要 Prismic 连接
+pnpm classes:check    # 依赖上一步产出的 CSS
+```
+
+`classes:check` 不能省 —— **无效的 Tailwind 类是静默忽略的**，不报错、不警告，
+页面只是少了那个样式，`typecheck` 和 `lint` 一个都拦不住。
 
 ## 内容建模
 
@@ -164,6 +271,9 @@ JS 那 199KB 基本是 **App Router 的固有基线**（React 运行时 + `next/
 代价是分钟级而非秒级。这是纯静态的固有取舍，见 `docs/tech-research.md` 12.7。
 
 ## Webhook
+
+> **现状：未接。** 仓库里没有 `.github/` 或任何流水线配置，本节描述的是**接法**，
+> 不是已经在跑的东西。在接上之前，内容发布后要手动构建部署（见「工作流程」A）。
 
 Prismic webhook 只能 POST 到一个 URL，**不能自定义请求头**，所以无法直接触发需要
 `Authorization` 头的 GitHub `repository_dispatch` —— 中间需要一个中转（云函数 / Worker），
