@@ -36,9 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const client = createClient();
 
-  const [pages, posts, releases] = await Promise.all([
+  const [pages, posts, beliefs, releases] = await Promise.all([
     client.getAllByType("page"),
     client.getAllByType("news_post"),
+    client.getAllByType("belief"),
     /* 与 /changelog 页面用的是同一条查询，force-cache 下不会多打一次请求。 */
     client.getAllByType("release_note"),
   ]);
@@ -46,6 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: absolute("/"), changeFrequency: "weekly", priority: 1 },
     { url: absolute("/news/"), changeFrequency: "weekly", priority: 0.8 },
+    { url: absolute("/beliefs/"), changeFrequency: "weekly", priority: 0.8 },
     {
       url: absolute("/changelog/"),
       lastModified: latestPublication(releases),
@@ -63,6 +65,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: post.last_publication_date,
       changeFrequency: "yearly" as const,
       priority: 0.5,
+    })),
+    ...beliefs.map((belief) => ({
+      url: absolute(`/beliefs/${belief.uid}/`),
+      lastModified: belief.last_publication_date,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     })),
   ];
 }
