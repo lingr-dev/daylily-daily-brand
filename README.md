@@ -38,6 +38,8 @@ npx prismic push
 # 5. 在 Prismic 后台创建并发布内容
 #    必须先建一篇 Settings（单例）—— 导航、页脚、备案号都取自它，缺了会构建失败
 #    再建 Homepage（单例）、News Index（单例），以及需要的 Page / News Post
+#    还必须建一篇 Belief Index（单例），以及至少一篇 Belief —— 零篇 Belief 会让
+#    /beliefs/:uid 的 generateStaticParams 返回空数组，静态导出直接失败
 ```
 
 之后注册预览与模拟器地址：
@@ -100,7 +102,7 @@ pnpm classes:check  # 拿真实编译产物核对每个 className（需先跑 bu
 5. 要进导航：`Settings` → 主导航 / 页脚导航 加一条，链接填 `/pricing`
 6. 重新构建部署
 
-UID 取值要避开已被静态路由占用的名字：**`news`**（`/news` 是独立路由）和
+UID 取值要避开已被静态路由占用的名字：**`news`**、**`changelog`**、**`beliefs`**、
 **`slice-simulator`**。撞上了产物路径会冲突。
 
 ### C. 新增一种版块（slice）—— 要动代码
@@ -209,6 +211,13 @@ npx prismic push                      # 推到 Prismic
 ```
 
 现有模型是怎么建出来的，见 [`scripts/bootstrap-content-model.sh`](scripts/bootstrap-content-model.sh)。
+
+页面类型：`homepage` `/` · `page` `/:uid` · `news_index` `/news` ·
+`news_post` `/news/:uid` · `belief_index` `/beliefs` · `belief` `/beliefs/:uid` ·
+`release_index` `/changelog` · `release_note`（无独立 URL）· `settings`。
+
+主导航约定（`settings.primary_nav`）：首页 `/`、主张 `/beliefs`、更新日志 `/changelog`。
+不要填落地页锚点（`/#philosophy` 等）。页脚导航可挂新闻 `/news`，不要再挂首页。
 
 注意两点：
 
