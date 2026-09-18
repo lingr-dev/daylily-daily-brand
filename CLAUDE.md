@@ -61,11 +61,17 @@ npx prismic docs list       # 官方文档可离线查
 
 例外：`prismic.config.json` 的 `routes` 官方文档明确允许直接编辑（用于校准路由路径）。
 
-两个易错点：
+三个易错点：
 
 - **slice 变体之间不继承字段**，每个变体都要独立声明。
 - **新增 page 类型要同步三处**：`prismic.config.json` 的 routes、`src/app/` 路由目录、
   该路由的 `generateStaticParams`。
+- **`routes` 里声明的类型必须先 push 到 Prismic，否则整站构建失败。**
+  `routes` 会随**每一次**查询发给 Content API，远端没有该类型时 Prismic 直接拒掉
+  请求：`[Link resolver error] Unknown type / Declared type: <类型>`。
+  报错落点是**别的**页面（谁先取数算谁）—— 加 `release_index` 时实测报在
+  `/[uid]` 的 `news_post` 查询上，很容易误判成那个页面的问题。
+  所以正确顺序是 `npx prismic push` 在前，`pnpm build:next` 在后。
 
 ## 图片
 

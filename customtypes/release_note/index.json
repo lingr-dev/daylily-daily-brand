@@ -1,0 +1,86 @@
+{
+  "format": "custom",
+  "id": "release_note",
+  "json": {
+    "Main": {
+      "uid": {
+        "config": {
+          "label": "UID"
+        },
+        "type": "UID"
+      },
+      "version": {
+        "config": {
+          "label": "版本号",
+          "placeholder": "v2.4.0"
+        },
+        "type": "Text"
+      },
+      "released_at": {
+        "config": {
+          "label": "发布日期"
+        },
+        "type": "Date"
+      },
+      "title": {
+        "config": {
+          "label": "一句话概述",
+          "placeholder": "这一版最值得说的一件事"
+        },
+        "type": "Text"
+      },
+      "summary": {
+        "config": {
+          "label": "补充说明",
+          "multi": "paragraph,strong,em,hyperlink"
+        },
+        "type": "StructuredText"
+      },
+      "is_major": {
+        "config": {
+          "label": "里程碑版本",
+          "placeholder_false": "否",
+          "placeholder_true": "是"
+        },
+        "type": "Boolean"
+      },
+      "link": {
+        "config": {
+          "allowText": true,
+          "label": "延伸链接"
+        },
+        "type": "Link"
+      },
+      "changes": {
+        "config": {
+          "fields": {
+            "kind": {
+              "config": {
+                "default_value": "feature",
+                "label": "类型",
+                "options": [
+                  "feature",
+                  "improvement",
+                  "fix"
+                ]
+              },
+              "type": "Select"
+            },
+            "description": {
+              "config": {
+                "label": "说明",
+                "placeholder": "一句话说清这条变更"
+              },
+              "type": "Text"
+            }
+          },
+          "label": "变更条目"
+        },
+        "type": "Group"
+      }
+    }
+  },
+  "label": "Release Note",
+  "repeatable": true,
+  "status": true
+}

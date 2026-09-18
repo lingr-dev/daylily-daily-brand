@@ -547,6 +547,110 @@ async function main() {
   );
 
 
+  /* ── release_index 单例 ────────────────────────────────────────────
+     /changelog 路由靠 getSingle("release_index") 取数，缺了它构建直接失败，
+     与 news_index 同理。 */
+  upsert(
+    "release_index",
+    {
+      type: "release_index",
+      lang: LANG,
+      data: {
+        meta_title: "更新日志",
+        meta_description: "萱草日签每一版改了什么。",
+        meta_image: undefined,
+        slices: [
+          {
+            slice_type: "hero",
+            variation: "default",
+            primary: {
+              anchor_id: "",
+              eyebrow: "",
+              heading: h1("更新日志"),
+              body: p("我们一直在改。每一版动了什么，都记在这里。"),
+              primary_link: { link_type: "Any" as const },
+              secondary_link: { link_type: "Any" as const },
+            },
+            items: [],
+          },
+        ],
+      },
+    },
+    "更新日志",
+  );
+
+
+  /* ── 几条 release_note ──────────────────────────────────────────────
+     与 news_post 不同，这些**不是**构建的必需品：/changelog 没有动态路由，
+     一条都没有时那一页只渲染「暂无内容」，整站照样构建得出来
+     （见 src/app/changelog/page.tsx 的注释）。
+
+     建这几条是为了让时间轴和「发布节奏」那张卡一上手就有东西可看 ——
+     那张卡的四个数字全由这些文档推导，空着就看不出它在做什么。
+
+     ⚠️ 全是占位文案，上线前换成真实的修订记录。 */
+  for (const release of [
+    {
+      uid: "v1-2-0",
+      version: "v1.2.0",
+      released_at: "2026-09-12",
+      title: "健康手帐可以按月导出了",
+      is_major: false,
+      summary: undefined,
+      changes: [
+        { kind: "feature", description: "健康手帐支持按月导出为 PDF，方便带去门诊" },
+        { kind: "improvement", description: "手帐列表滚动更顺，长列表不再卡顿" },
+        { kind: "fix", description: "修正跨时区时健康记录日期偏移一天的问题" },
+      ],
+    },
+    {
+      uid: "v1-1-0",
+      version: "v1.1.0",
+      released_at: "2026-08-21",
+      title: "一家人的健康安排可以共享了",
+      is_major: false,
+      summary: undefined,
+      changes: [
+        { kind: "feature", description: "健康安排支持共享给家庭成员" },
+        { kind: "improvement", description: "新增健康记录时默认带上今天的日期" },
+        { kind: "fix", description: "修正部分机型上日期选择器无法关闭的问题" },
+      ],
+    },
+    {
+      uid: "v1-0-0",
+      version: "v1.0.0",
+      released_at: "2026-07-15",
+      title: "萱草日签正式上线",
+      is_major: true,
+      summary: p("第一个正式版本。健康手帐、健康安排、健康记录三件事都能用了。"),
+      changes: [
+        { kind: "feature", description: "健康手帐：把一家人的健康小事记在一处" },
+        { kind: "feature", description: "健康安排：吃药、复诊、体检都能提前提醒" },
+        { kind: "feature", description: "健康记录：血压、体重这些数字可以连着看" },
+      ],
+    },
+  ] as const) {
+    upsert(
+      `release_note/${release.uid}`,
+      {
+        type: "release_note",
+        uid: release.uid,
+        lang: LANG,
+        data: {
+          version: release.version,
+          released_at: release.released_at,
+          title: release.title,
+          summary: release.summary,
+          is_major: release.is_major,
+          link: { link_type: "Any" as const },
+          changes: release.changes.map((change) => ({ ...change })),
+        },
+      },
+      release.version,
+    );
+  }
+
+
   /* ── 法务页占位 ──────────────────────────────────────────────────────
      页脚链到 /privacy 与 /terms。静态导出下链到不存在的路径就是硬 404，
      所以先建两页把链接接上。

@@ -330,6 +330,185 @@ interface PageDocumentData {
  */
 export type PageDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
+type ReleaseIndexDocumentDataSlicesSlice = HeroSlice | RichTextSlice | CtaBannerSlice
+
+/**
+ * Content for Release Index documents
+ */
+interface ReleaseIndexDocumentData {
+	/**
+	 * Slice Zone field in *Release Index*
+	 *
+	 * - **Field Type**: Slice Zone
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_index.slices[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/slices
+	 */
+	slices: prismic.SliceZone<ReleaseIndexDocumentDataSlicesSlice>;/**
+	 * Meta Title field in *Release Index*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A title of the page used for social media and search engines
+	 * - **API ID Path**: release_index.meta_title
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_title: prismic.KeyTextField;
+	
+	/**
+	 * Meta Description field in *Release Index*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A brief summary of the page
+	 * - **API ID Path**: release_index.meta_description
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_description: prismic.KeyTextField;
+	
+	/**
+	 * Meta Image field in *Release Index*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_index.meta_image
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Release Index document from Prismic
+ *
+ * - **API ID**: `release_index`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type ReleaseIndexDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<ReleaseIndexDocumentData>, "release_index", Lang>;
+
+/**
+ * Item in *Release Note → 变更条目*
+ */
+export interface ReleaseNoteDocumentDataChangesItem {
+	/**
+	 * 类型 field in *Release Note → 变更条目*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: feature
+	 * - **API ID Path**: release_note.changes[].kind
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	kind: prismic.SelectField<"feature" | "improvement" | "fix", "filled">;
+	
+	/**
+	 * 说明 field in *Release Note → 变更条目*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 一句话说清这条变更
+	 * - **API ID Path**: release_note.changes[].description
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	description: prismic.KeyTextField;
+}
+
+/**
+ * Content for Release Note documents
+ */
+interface ReleaseNoteDocumentData {
+	/**
+	 * 版本号 field in *Release Note*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: v2.4.0
+	 * - **API ID Path**: release_note.version
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	version: prismic.KeyTextField;
+	
+	/**
+	 * 发布日期 field in *Release Note*
+	 *
+	 * - **Field Type**: Date
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_note.released_at
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/date
+	 */
+	released_at: prismic.DateField;
+	
+	/**
+	 * 一句话概述 field in *Release Note*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 这一版最值得说的一件事
+	 * - **API ID Path**: release_note.title
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	title: prismic.KeyTextField;
+	
+	/**
+	 * 补充说明 field in *Release Note*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_note.summary
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	summary: prismic.RichTextField;
+	
+	/**
+	 * 里程碑版本 field in *Release Note*
+	 *
+	 * - **Field Type**: Boolean
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_note.is_major
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/boolean
+	 */
+	is_major: prismic.BooleanField;
+	
+	/**
+	 * 延伸链接 field in *Release Note*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_note.link
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/link
+	 */
+	link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
+	 * 变更条目 field in *Release Note*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: release_note.changes[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	changes: prismic.GroupField<Simplify<ReleaseNoteDocumentDataChangesItem>>;
+}
+
+/**
+ * Release Note document from Prismic
+ *
+ * - **API ID**: `release_note`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type ReleaseNoteDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<Simplify<ReleaseNoteDocumentData>, "release_note", Lang>;
+
 /**
  * Item in *Settings → 社交账号*
  */
@@ -589,7 +768,7 @@ interface SettingsDocumentData {
  */
 export type SettingsDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<SettingsDocumentData>, "settings", Lang>;
 
-export type AllDocumentTypes = HomepageDocument | NewsIndexDocument | NewsPostDocument | PageDocument | SettingsDocument;
+export type AllDocumentTypes = HomepageDocument | NewsIndexDocument | NewsPostDocument | PageDocument | ReleaseIndexDocument | ReleaseNoteDocument | SettingsDocument;
 
 /**
  * Primary content in *Callout → Default → Primary*
@@ -1911,6 +2090,12 @@ declare module "@prismicio/client" {
 			PageDocument,
 			PageDocumentData,
 			PageDocumentDataSlicesSlice,
+			ReleaseIndexDocument,
+			ReleaseIndexDocumentData,
+			ReleaseIndexDocumentDataSlicesSlice,
+			ReleaseNoteDocument,
+			ReleaseNoteDocumentData,
+			ReleaseNoteDocumentDataChangesItem,
 			SettingsDocument,
 			SettingsDocumentData,
 			SettingsDocumentDataSocialLinksItem,

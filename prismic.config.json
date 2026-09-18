@@ -14,6 +14,10 @@
       "path": "/news/:uid"
     },
     {
+      "type": "release_index",
+      "path": "/changelog"
+    },
+    {
       "type": "page",
       "path": "/:uid"
     }

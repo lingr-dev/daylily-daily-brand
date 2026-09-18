@@ -17,6 +17,11 @@ p() { npx prismic "$@"; }
 
 echo "==> 1/4 页面类型"
 
+# ⚠️ `type create --format page` 除了建模型，还会按类型 id 生成一份路由脚手架
+# （本仓库里是 src/app/<id>/page.tsx）。这些 stub 一律要删掉：路径是类型 id 而不是
+# 校准后的路由，取数也没带 context={{ settings }}。本仓库的真实页面是
+# src/app/page.tsx、[uid]/、news/、changelog/ —— 从零重建后记得清理多余目录。
+
 # 首页：单例，路由 /
 p type create "Homepage" --format page --single
 
@@ -38,6 +43,33 @@ p field reorder title --from-type news_post --before slices
 p field reorder excerpt --from-type news_post --after title
 p field reorder cover --from-type news_post --after excerpt
 p field reorder published_at --from-type news_post --after cover
+
+# 更新日志列表：单例，路由在 prismic.config.json 里手工校准为 /changelog
+p type create "Release Index" --format page --single --id release_index
+
+# 一条发布记录。刻意用 custom 而不是 page 格式 —— 它没有自己的 URL，全部渲染在
+# /changelog 的时间轴上（见 src/app/changelog/page.tsx）。--format page 会自动往
+# prismic.config.json 加一条路由，而指向不存在页面的路由会让 link resolver 生成
+# 404 链接。
+p type create "Release Note" --id release_note
+
+p field add text version --to-type release_note --label "版本号" --placeholder "v2.4.0"
+p field add date released_at --to-type release_note --label "发布日期"
+p field add text title --to-type release_note --label "一句话概述" \
+  --placeholder "这一版最值得说的一件事"
+p field add rich-text summary --to-type release_note --label "补充说明" \
+  --allow paragraph,strong,em,hyperlink
+p field add boolean is_major --to-type release_note --label "里程碑版本" \
+  --true-label "是" --false-label "否"
+p field add link link --to-type release_note --label "延伸链接" --allow-text
+p field add group changes --to-type release_note --label "变更条目"
+p field add select changes.kind --to-type release_note --label "类型" \
+  --option feature --option improvement --option fix --default-value feature
+p field add text changes.description --to-type release_note --label "说明" \
+  --placeholder "一句话说清这条变更"
+# 可重复类型会自动带一个 uid，且官方明确「cannot be manually added or removed」
+# （npx prismic docs view fields/uid）。这个类型不参与路由，但 uid 仍有用：
+# 它是 Prismic 保证类型内唯一的标识，正好当时间轴的锚点（/changelog/#v1-2-0）。
 
 echo "==> 2/4 站点设置（非页面类型，单例）"
 
@@ -173,6 +205,11 @@ done
 # 新闻详情页：正文向的 slice
 for s in rich_text image_text cta_banner faq; do
   p slice connect "$s" --to news_post
+done
+
+# 更新日志列表页：与新闻列表页同一套
+for s in hero rich_text cta_banner; do
+  p slice connect "$s" --to release_index
 done
 
 echo "==> 生成 slice 索引与 TypeScript 类型"
