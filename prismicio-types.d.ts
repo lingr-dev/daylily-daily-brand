@@ -46,6 +46,181 @@ type ContentRelationshipFieldWithData<
 		>
 }[Exclude<TCustomType[number], string>["id"]];
 
+type BeliefDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | MediaCardsSlice | CalloutSlice | ImageTextSlice | CtaBannerSlice | FaqSlice
+
+/**
+ * Content for Belief documents
+ */
+interface BeliefDocumentData {
+	/**
+	 * 标题 field in *Belief*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.title
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	title: prismic.RichTextField;
+	
+	/**
+	 * 摘要 field in *Belief*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: 宫格与分享卡片上显示的一句话
+	 * - **API ID Path**: belief.excerpt
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	excerpt: prismic.KeyTextField;
+	
+	/**
+	 * 封面图 field in *Belief*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.cover
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	cover: prismic.ImageField<never>;
+	
+	/**
+	 * 发布日期 field in *Belief*
+	 *
+	 * - **Field Type**: Date
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.published_at
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/date
+	 */
+	published_at: prismic.DateField;
+	
+	/**
+	 * 主题 field in *Belief*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.topic
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/select
+	 */
+	topic: prismic.SelectField<"人群" | "意图" | "取舍" | "设计">;
+	
+	/**
+	 * Slice Zone field in *Belief*
+	 *
+	 * - **Field Type**: Slice Zone
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.slices[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/slices
+	 */
+	slices: prismic.SliceZone<BeliefDocumentDataSlicesSlice>;/**
+	 * Meta Title field in *Belief*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A title of the page used for social media and search engines
+	 * - **API ID Path**: belief.meta_title
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_title: prismic.KeyTextField;
+	
+	/**
+	 * Meta Description field in *Belief*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A brief summary of the page
+	 * - **API ID Path**: belief.meta_description
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_description: prismic.KeyTextField;
+	
+	/**
+	 * Meta Image field in *Belief*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief.meta_image
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Belief document from Prismic
+ *
+ * - **API ID**: `belief`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type BeliefDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<Simplify<BeliefDocumentData>, "belief", Lang>;
+
+type BeliefIndexDocumentDataSlicesSlice = HeroSlice | RichTextSlice | CtaBannerSlice
+
+/**
+ * Content for Belief Index documents
+ */
+interface BeliefIndexDocumentData {
+	/**
+	 * Slice Zone field in *Belief Index*
+	 *
+	 * - **Field Type**: Slice Zone
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief_index.slices[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/slices
+	 */
+	slices: prismic.SliceZone<BeliefIndexDocumentDataSlicesSlice>;/**
+	 * Meta Title field in *Belief Index*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A title of the page used for social media and search engines
+	 * - **API ID Path**: belief_index.meta_title
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_title: prismic.KeyTextField;
+	
+	/**
+	 * Meta Description field in *Belief Index*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: A brief summary of the page
+	 * - **API ID Path**: belief_index.meta_description
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	meta_description: prismic.KeyTextField;
+	
+	/**
+	 * Meta Image field in *Belief Index*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: belief_index.meta_image
+	 * - **Tab**: SEO & Metadata
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Belief Index document from Prismic
+ *
+ * - **API ID**: `belief_index`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type BeliefIndexDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<BeliefIndexDocumentData>, "belief_index", Lang>;
+
 type HomepageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FeatureGridSlice | StatsSlice | LogoWallSlice | ImageTextSlice | TestimonialSlice | CtaBannerSlice | FaqSlice | MediaCardsSlice | CalloutSlice
 
 /**
@@ -768,7 +943,7 @@ interface SettingsDocumentData {
  */
 export type SettingsDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<SettingsDocumentData>, "settings", Lang>;
 
-export type AllDocumentTypes = HomepageDocument | NewsIndexDocument | NewsPostDocument | PageDocument | ReleaseIndexDocument | ReleaseNoteDocument | SettingsDocument;
+export type AllDocumentTypes = BeliefDocument | BeliefIndexDocument | HomepageDocument | NewsIndexDocument | NewsPostDocument | PageDocument | ReleaseIndexDocument | ReleaseNoteDocument | SettingsDocument;
 
 /**
  * Primary content in *Callout → Default → Primary*
@@ -2078,6 +2253,12 @@ declare module "@prismicio/client" {
 	
 	namespace Content {
 		export type {
+			BeliefDocument,
+			BeliefDocumentData,
+			BeliefDocumentDataSlicesSlice,
+			BeliefIndexDocument,
+			BeliefIndexDocumentData,
+			BeliefIndexDocumentDataSlicesSlice,
 			HomepageDocument,
 			HomepageDocumentData,
 			HomepageDocumentDataSlicesSlice,

@@ -14,6 +14,14 @@
       "path": "/news/:uid"
     },
     {
+      "type": "belief_index",
+      "path": "/beliefs"
+    },
+    {
+      "type": "belief",
+      "path": "/beliefs/:uid"
+    },
+    {
       "type": "release_index",
       "path": "/changelog"
     },

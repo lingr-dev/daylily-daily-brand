@@ -20,7 +20,7 @@ echo "==> 1/4 页面类型"
 # ⚠️ `type create --format page` 除了建模型，还会按类型 id 生成一份路由脚手架
 # （本仓库里是 src/app/<id>/page.tsx）。这些 stub 一律要删掉：路径是类型 id 而不是
 # 校准后的路由，取数也没带 context={{ settings }}。本仓库的真实页面是
-# src/app/page.tsx、[uid]/、news/、changelog/ —— 从零重建后记得清理多余目录。
+# src/app/page.tsx、[uid]/、news/、changelog/、beliefs/ —— 从零重建后记得清理多余目录。
 
 # 首页：单例，路由 /
 p type create "Homepage" --format page --single
@@ -43,6 +43,24 @@ p field reorder title --from-type news_post --before slices
 p field reorder excerpt --from-type news_post --after title
 p field reorder cover --from-type news_post --after excerpt
 p field reorder published_at --from-type news_post --after cover
+
+# 主张列表：单例，路由在 prismic.config.json 里手工校准为 /beliefs
+p type create "Belief Index" --format page --single --id belief_index
+
+# 一篇主张。路由校准为 /beliefs/:uid
+p type create "Belief" --format page --id belief
+
+p field add rich-text title --to-type belief --label "标题" --allow heading1 --single
+p field add text excerpt --to-type belief --label "摘要" --placeholder "宫格与分享卡片上显示的一句话"
+p field add image cover --to-type belief --label "封面图"
+p field add date published_at --to-type belief --label "发布日期"
+p field add select topic --to-type belief --label "主题" \
+  --option 人群 --option 意图 --option 取舍 --option 设计
+p field reorder title --from-type belief --before slices
+p field reorder excerpt --from-type belief --after title
+p field reorder cover --from-type belief --after excerpt
+p field reorder published_at --from-type belief --after cover
+p field reorder topic --from-type belief --after published_at
 
 # 更新日志列表：单例，路由在 prismic.config.json 里手工校准为 /changelog
 p type create "Release Index" --format page --single --id release_index
@@ -131,6 +149,33 @@ p field add text items.title --to-slice feature_grid --label "标题"
 p field add rich-text items.description --to-slice feature_grid --label "描述" \
   --allow paragraph,strong,em,hyperlink
 
+# --- Callout -----------------------------------------------------------
+p slice create "Callout"
+p field add select icon --to-slice callout --label "图标" \
+  --option translate-2 --option time-line --option battery-low-line --option eye-line \
+  --option lock-2-line --option sun-cloudy-line --option parent-line \
+  --option question-answer-line --option wechat-line
+p field add text title --to-slice callout --label "标题"
+p field add rich-text body --to-slice callout --label "正文" \
+  --allow paragraph,strong,em,hyperlink
+
+# --- Media Cards --------------------------------------------------------
+p slice create "MediaCards" --id media_cards
+p field add rich-text heading --to-slice media_cards --label "标题" --allow heading2 --single
+p field add rich-text body --to-slice media_cards --label "引言" --allow paragraph,strong,em
+p field add select columns --to-slice media_cards --label "每行列数" \
+  --option 2 --option 3 --default-value 3
+p field add select layout --to-slice media_cards --label "图文顺序" \
+  --option imageFirst --option textFirst --default-value imageFirst
+p field add text anchor_id --to-slice media_cards --label "锚点 ID" \
+  --placeholder "如 today，留空则不生成锚点"
+p field add group items --to-slice media_cards --label "条目"
+p field add text items.eyebrow --to-slice media_cards --label "眉标" --placeholder "如 照护者这边"
+p field add text items.title --to-slice media_cards --label "标题"
+p field add rich-text items.body --to-slice media_cards --label "说明" \
+  --allow paragraph,strong,em
+p field add image items.image --to-slice media_cards --label "配图"
+
 # --- Stats --------------------------------------------------------------
 p slice create "Stats"
 p field add rich-text heading --to-slice stats --label "标题" --allow heading2 --single
@@ -189,7 +234,7 @@ p field add rich-text items.answer --to-slice faq --label "回答" \
 
 echo "==> 4/4 把 slice 挂到各页面类型的 slice zone"
 
-ALL_SLICES="hero rich_text feature_grid stats logo_wall image_text testimonial cta_banner faq"
+ALL_SLICES="hero rich_text feature_grid media_cards callout stats logo_wall image_text testimonial cta_banner faq"
 
 # 首页与通用页面：全部 slice 可用，营销同事自由拼装
 for s in $ALL_SLICES; do
@@ -205,6 +250,16 @@ done
 # 新闻详情页：正文向的 slice
 for s in rich_text image_text cta_banner faq; do
   p slice connect "$s" --to news_post
+done
+
+# 主张列表页：与新闻列表页同一套
+for s in hero rich_text cta_banner; do
+  p slice connect "$s" --to belief_index
+done
+
+# 主张详情：比新闻宽，要能迁落地页那种章节
+for s in hero rich_text feature_grid media_cards callout image_text cta_banner faq; do
+  p slice connect "$s" --to belief
 done
 
 # 更新日志列表页：与新闻列表页同一套

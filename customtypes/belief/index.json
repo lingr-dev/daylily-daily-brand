@@ -1,0 +1,114 @@
+{
+  "format": "page",
+  "id": "belief",
+  "json": {
+    "Main": {
+      "uid": {
+        "config": {
+          "label": "UID"
+        },
+        "type": "UID"
+      },
+      "title": {
+        "config": {
+          "label": "标题",
+          "single": "heading1"
+        },
+        "type": "StructuredText"
+      },
+      "excerpt": {
+        "config": {
+          "label": "摘要",
+          "placeholder": "宫格与分享卡片上显示的一句话"
+        },
+        "type": "Text"
+      },
+      "cover": {
+        "config": {
+          "label": "封面图"
+        },
+        "type": "Image"
+      },
+      "published_at": {
+        "config": {
+          "label": "发布日期"
+        },
+        "type": "Date"
+      },
+      "topic": {
+        "config": {
+          "label": "主题",
+          "options": [
+            "人群",
+            "意图",
+            "取舍",
+            "设计"
+          ]
+        },
+        "type": "Select"
+      },
+      "slices": {
+        "config": {
+          "choices": {
+            "hero": {
+              "type": "SharedSlice"
+            },
+            "rich_text": {
+              "type": "SharedSlice"
+            },
+            "feature_grid": {
+              "type": "SharedSlice"
+            },
+            "media_cards": {
+              "type": "SharedSlice"
+            },
+            "callout": {
+              "type": "SharedSlice"
+            },
+            "image_text": {
+              "type": "SharedSlice"
+            },
+            "cta_banner": {
+              "type": "SharedSlice"
+            },
+            "faq": {
+              "type": "SharedSlice"
+            }
+          }
+        },
+        "fieldset": "Slice Zone",
+        "type": "Slices"
+      }
+    },
+    "SEO & Metadata": {
+      "meta_title": {
+        "config": {
+          "label": "Meta Title",
+          "placeholder": "A title of the page used for social media and search engines"
+        },
+        "type": "Text"
+      },
+      "meta_description": {
+        "config": {
+          "label": "Meta Description",
+          "placeholder": "A brief summary of the page"
+        },
+        "type": "Text"
+      },
+      "meta_image": {
+        "config": {
+          "constraint": {
+            "height": 1260,
+            "width": 2400
+          },
+          "label": "Meta Image",
+          "thumbnails": []
+        },
+        "type": "Image"
+      }
+    }
+  },
+  "label": "Belief",
+  "repeatable": true,
+  "status": true
+}
