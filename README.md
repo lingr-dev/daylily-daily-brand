@@ -2,6 +2,8 @@
 
 品牌官网前端。内容在 [Prismic](https://prismic.io) 里编辑，**构建期**取回并渲染成纯静态站点。
 
+「萱草主张」的十二篇本地短文见 [文章目录](content/beliefs/README.md)。这些是尚未发布的完整稿件，包含标题、摘要和结构化元信息；站点暂不直接读取本地 Markdown。
+
 技术路线与取舍的完整论证见 [`docs/tech-research.md`](docs/tech-research.md)（第 12 节是落地依据）。一句话概括：
 
 > Next.js 16 App Router + `output: 'export'` 纯静态导出 + Prismic CLI / Type Builder，
