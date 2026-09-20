@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { PrismicNextLink } from "@prismicio/next";
-import { asLink, isFilled, type Content } from "@prismicio/client";
+import { asLink, type Content } from "@prismicio/client";
 import { buttonClass } from "@/components/Button";
 import { Container } from "@/components/Container";
-import { PrismicImage } from "@/components/PrismicImage";
 import { filledLinks } from "@/lib/settings";
 import { site } from "@/lib/site";
 
@@ -31,17 +30,16 @@ export function SiteHeader({
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold tracking-tight text-content-primary transition-colors hover:text-brand-deep"
+            aria-label={siteName}
           >
-            {isFilled.image(settings.data.logo) ? (
-              <PrismicImage
-                field={settings.data.logo}
-                sizes="120px"
-                priority
-                className="h-8 w-auto"
-              />
-            ) : (
-              siteName
-            )}
+            {/*
+              Logo 与小程序码一样用 public/ 里的本地副本，不走 Prismic 媒体库
+              （迁移方案 §6：样机截图、logo、二维码都进外部存储/本地，不进媒体库）。
+              源文件 https://www.lingerer.cn/assets/logo.jpg，
+              settings 里的 logo 图片字段因此不再使用。
+            */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logo.jpg" alt={siteName} className="h-8 w-auto" />
           </Link>
 
           <div className="flex items-center gap-4 md:gap-8">
