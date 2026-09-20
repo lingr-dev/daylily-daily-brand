@@ -2,6 +2,7 @@ import { isFilled, type Content } from "@prismicio/client";
 import type { SliceComponentProps } from "@prismicio/react";
 import { Container } from "@/components/Container";
 import { ImagePlaceholder } from "@/components/ImagePlaceholder";
+import { mockupFor } from "@/components/mockups";
 import { PrismicImage } from "@/components/PrismicImage";
 import { RichText } from "@/components/RichText";
 
@@ -51,6 +52,8 @@ export default function MediaCards({ slice }: MediaCardsProps) {
         {items.length > 0 && (
           <ul className={`mt-12 grid gap-10 lg:gap-12 ${gridClass}`}>
             {items.map((item, index) => {
+              /* 图片字段留空时先用 markup 样机顶上，见 components/mockups */
+              const mockup = mockupFor(`${anchor_id}.${index}`);
               const hasText =
                 Boolean(item.eyebrow) ||
                 Boolean(item.title) ||
@@ -69,6 +72,8 @@ export default function MediaCards({ slice }: MediaCardsProps) {
                       sizes="(min-width: 1024px) 24rem, (min-width: 768px) 45vw, 90vw"
                       className="h-auto w-full rounded-xl border border-sand"
                     />
+                  ) : mockup ? (
+                    mockup
                   ) : (
                     <ImagePlaceholder label="界面图" />
                   )}

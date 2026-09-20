@@ -2,6 +2,7 @@ import { isFilled, type Content } from "@prismicio/client";
 import type { SliceComponentProps } from "@prismicio/react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
+import { mockupFor } from "@/components/mockups";
 import { PrismicImage } from "@/components/PrismicImage";
 import { RichText } from "@/components/RichText";
 
@@ -17,6 +18,11 @@ export default function ImageText({ slice }: ImageTextProps) {
   const { heading, body, image, link } = slice.primary;
   const imageFirst = slice.variation === "imageLeft";
 
+  /* 图片字段留空时先用 markup 样机顶上，见 components/mockups */
+  const mockup = mockupFor(slice.slice_type);
+
+  const side = imageFirst ? "lg:order-first" : "lg:order-last";
+
   return (
     <section
       data-slice-type={slice.slice_type}
@@ -25,18 +31,16 @@ export default function ImageText({ slice }: ImageTextProps) {
     >
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          {isFilled.image(image) && (
-            <div
-              className={`overflow-hidden rounded-card bg-sand-wash ${
-                imageFirst ? "lg:order-first" : "lg:order-last"
-              }`}
-            >
+          {isFilled.image(image) ? (
+            <div className={`overflow-hidden rounded-card bg-sand-wash ${side}`}>
               <PrismicImage
                 field={image}
                 sizes="(min-width: 1024px) 34rem, 90vw"
                 className="h-auto w-full"
               />
             </div>
+          ) : (
+            mockup && <div className={side}>{mockup}</div>
           )}
 
           <div>
