@@ -29,17 +29,27 @@ export function SiteHeader({
         <div className="flex h-16 items-center justify-between gap-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-lg font-semibold tracking-tight text-content-primary transition-colors hover:text-brand-deep"
-            aria-label={siteName}
+            className="flex items-center gap-3 text-content-primary transition-colors hover:text-brand-deep"
           >
             {/*
               Logo 与小程序码一样用 public/ 里的本地副本，不走 Prismic 媒体库
               （迁移方案 §6：样机截图、logo、二维码都进外部存储/本地，不进媒体库）。
               源文件 https://www.lingerer.cn/assets/logo.jpg，
               settings 里的 logo 图片字段因此不再使用。
+
+              alt 留空、链接也不挂 aria-label：站名就写在旁边，读屏从可见文字取
+              可访问名即可。图上再写一遍只会让它念两遍。
             */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/logo.jpg" alt={siteName} className="h-8 w-auto" />
+            <img
+              src="/assets/logo.jpg"
+              alt=""
+              className="h-8 w-8 rounded-md object-cover shadow-brand-sm md:h-10 md:w-10"
+            />
+            {/* 站名照原型页走衬线体 —— 它是品牌字面，不是界面文字 */}
+            <span className="font-serif text-title-3 font-bold tracking-wider">
+              {siteName}
+            </span>
           </Link>
 
           <div className="flex items-center gap-4 md:gap-8">
