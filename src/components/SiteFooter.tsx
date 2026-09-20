@@ -140,11 +140,36 @@ function Filings({ settings }: { settings: Content.SettingsDocument }) {
       )}
       {police_license &&
         (isFilled.link(police_license_link) ? (
-          <PrismicNextLink field={police_license_link} className={linkClass}>
+          <PrismicNextLink
+            field={police_license_link}
+            className={`inline-flex items-center gap-1 ${linkClass}`}
+          >
+            {/*
+              公安备案徽章用 public/ 里的本地副本，不留 img-xs.lingerer.cn
+              外链（landing-migration §5）。
+            */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/beian-mps.png"
+              alt=""
+              width={14}
+              height={15}
+              className="inline-block"
+            />
             {police_license}
           </PrismicNextLink>
         ) : (
-          <span>{police_license}</span>
+          <span className="inline-flex items-center gap-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/beian-mps.png"
+              alt=""
+              width={14}
+              height={15}
+              className="inline-block"
+            />
+            {police_license}
+          </span>
         ))}
     </div>
   );

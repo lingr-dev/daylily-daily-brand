@@ -2,8 +2,6 @@ import { isFilled, type Content } from "@prismicio/client";
 import type { SliceComponentProps } from "@prismicio/react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
-import { PrismicImage } from "@/components/PrismicImage";
 import { RichText } from "@/components/RichText";
 import type { SliceContext } from "@/lib/slice-context";
 
@@ -110,7 +108,6 @@ export default function CtaBanner({ slice, context }: CtaBannerProps) {
  */
 function QrBlock({ settings }: { settings: Content.SettingsDocument }) {
   const {
-    miniprogram_qrcode,
     miniprogram_qr_title,
     miniprogram_qr_description,
     miniprogram_qr_note,
@@ -130,15 +127,20 @@ function QrBlock({ settings }: { settings: Content.SettingsDocument }) {
       )}
 
       <div className="mt-6 w-44">
-        {isFilled.image(miniprogram_qrcode) ? (
-          <PrismicImage
-            field={miniprogram_qrcode}
-            sizes="176px"
-            className="h-auto w-full rounded-lg border border-sand bg-surface-container p-2"
-          />
-        ) : (
-          <ImagePlaceholder label="二维码" aspect="aspect-square" />
-        )}
+        {/*
+          小程序码用 public/ 里的原图，不走 Prismic 媒体库：
+          localize-images 管线固定 fm=webp&q=78，有损压缩在高对比度线条图上
+          会产生 artifact，直接影响扫码识别率（landing-migration §6）。
+          settings 里的 miniprogram_qrcode 图片字段因此不再使用。
+        */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/qrcode.png"
+          alt="萱草日签小程序码"
+          width={176}
+          height={176}
+          className="h-auto w-full rounded-lg border border-sand bg-surface-container p-2"
+        />
       </div>
 
       {miniprogram_qr_note && (
