@@ -29,7 +29,11 @@
      ------------------------------------------------------------------- */
   --spacing-section: 5rem;
   --spacing-section-lg: 7.5rem;
-  --container-content: 72rem;
+
+  /* 内容带宽度，对齐原型页 landing-page.html 的 `max-w-[1400px]`。
+     注意这是**净宽**：左右留白由 Container 在这一层之外给，
+     不像此前那样把 padding 算在 max-width 里（那让 72rem 实际只剩 68rem）。 */
+  --container-content: 87.5rem;
 }
 
 /* ==========================================================================

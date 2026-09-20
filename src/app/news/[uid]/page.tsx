@@ -52,7 +52,7 @@ export default async function NewsPostPage({
           <div className="mt-10 overflow-hidden rounded-card bg-sand-wash">
             <PrismicImage
               field={post.data.cover}
-              sizes="(min-width: 1152px) 1152px, 100vw"
+              sizes="(min-width: 1400px) 1400px, 100vw"
               priority
               className="h-auto w-full"
             />
